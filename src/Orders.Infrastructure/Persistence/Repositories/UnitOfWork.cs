@@ -6,10 +6,13 @@ using System.Data.Common;
 
 namespace Orders.Infrastructure.Persistence.Repositories
 {
-    public class UnitOfWork(SqlConnectionFactory connectionFactory) : IUnitOfWork, IDisposable
+    public class UnitOfWork(SqlConnectionFactory connectionFactory,
+                            IOrderRepository orderRepository) : IUnitOfWork, IDisposable
     {
         private readonly SqlConnection _connection = connectionFactory.Create();
         private DbTransaction? _transaction;
+
+        IOrderRepository IUnitOfWork.OrderRepository => orderRepository;
 
         public async Task BeginTransaction()
         {
