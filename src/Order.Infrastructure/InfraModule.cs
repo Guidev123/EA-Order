@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Order.Core.Repositories.Order.Core.Repositories;
+using Order.Core.Repositories;
+using Order.Infrastructure.Persistence.Factories;
 using Order.Infrastructure.Persistence.Repositories;
 
 namespace Order.Infrastructure
@@ -14,14 +15,15 @@ namespace Order.Infrastructure
 
         public static void AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork>(sp =>
+            services.AddSingleton(sp =>
             {
                 var configuration = sp.GetRequiredService<IConfiguration>();
-                var connectionString = configuration.GetConnectionString("DefaultConnection");
-                return connectionString is not null
-                ? new UnitOfWork(connectionString)
-                : throw new ArgumentNullException("The connection string 'DefaultConnection' is not configured");
+                var connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new ArgumentNullException("The connection string 'DefaultConnection' is not configured");
+                return new SqlConnectionFactory(connectionString);
             });
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }
