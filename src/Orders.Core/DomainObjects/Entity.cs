@@ -1,4 +1,4 @@
-﻿namespace Order.Core.DomainObjects
+﻿namespace Orders.Core.DomainObjects
 {
     public abstract class Entity
     {

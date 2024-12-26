@@ -1,10 +1,10 @@
 ﻿using Microsoft.Data.SqlClient;
-using Order.Core.Repositories;
-using Order.Infrastructure.Persistence.Factories;
+using Orders.Core.Repositories;
+using Orders.Infrastructure.Persistence.Factories;
 using System.Data;
 using System.Data.Common;
 
-namespace Order.Infrastructure.Persistence.Repositories
+namespace Orders.Infrastructure.Persistence.Repositories
 {
     public class UnitOfWork(SqlConnectionFactory connectionFactory) : IUnitOfWork, IDisposable
     {

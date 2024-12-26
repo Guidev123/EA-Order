@@ -1,8 +1,8 @@
-﻿using Order.Core.DomainObjects;
-using Order.Core.Enums;
-using Order.Core.ValueObjects;
+﻿using Orders.Core.DomainObjects;
+using Orders.Core.Enums;
+using Orders.Core.ValueObjects;
 
-namespace Order.Core.Entities
+namespace Orders.Core.Entities
 {
     public class Order : Entity, IAggregateRoot
     {

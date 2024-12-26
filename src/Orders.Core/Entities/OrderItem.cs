@@ -1,6 +1,6 @@
-﻿using Order.Core.DomainObjects;
+﻿using Orders.Core.DomainObjects;
 
-namespace Order.Core.Entities
+namespace Orders.Core.Entities
 {
     public class OrderItem : Entity
     {

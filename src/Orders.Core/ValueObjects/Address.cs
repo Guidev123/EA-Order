@@ -1,4 +1,4 @@
-﻿namespace Order.Core.ValueObjects
+﻿namespace Orders.Core.ValueObjects
 {
     public class Address : ValueObject
     {

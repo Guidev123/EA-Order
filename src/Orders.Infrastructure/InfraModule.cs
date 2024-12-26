@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Order.Core.Repositories;
-using Order.Infrastructure.Persistence.Factories;
-using Order.Infrastructure.Persistence.Repositories;
+using Orders.Core.Repositories;
+using Orders.Infrastructure.Persistence.Factories;
+using Orders.Infrastructure.Persistence.Repositories;
 
-namespace Order.Infrastructure
+namespace Orders.Infrastructure
 {
     public static class InfraModule
     {
         public static void AddInfra(this IServiceCollection services)
         {
-            AddRepositories(services);
+            services.AddRepositories();
         }
 
         public static void AddRepositories(this IServiceCollection services)

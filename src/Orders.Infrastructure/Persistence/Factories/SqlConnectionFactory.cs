@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace Order.Infrastructure.Persistence.Factories
+namespace Orders.Infrastructure.Persistence.Factories
 {
     public class SqlConnectionFactory(string conncetion)
     {

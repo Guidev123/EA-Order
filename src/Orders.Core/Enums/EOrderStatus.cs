@@ -1,4 +1,4 @@
-﻿namespace Order.Core.Enums
+﻿namespace Orders.Core.Enums
 {
     public enum EOrderStatus
     {

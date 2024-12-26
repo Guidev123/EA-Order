@@ -1,4 +1,4 @@
-﻿namespace Order.Core.Repositories
+﻿namespace Orders.Core.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
