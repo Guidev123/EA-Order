@@ -2,7 +2,7 @@
   <a href="https://dotnet.microsoft.com/" target="blank"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/.NET_Core_Logo.svg" width="120" alt=".NET Logo" /></a>
 </p>
 
-# Orders API
+# Orders API (⚠️ In development ⚠️ ) 
 
 This is the core service of my application, responsible for managing orders. The service was developed using Event-Driven Architecture (EDA) and follows the principles of Clean Architecture, CQRS, SOLID, and Domain-Driven Design (DDD). It interacts with the Cart API by publishing events using the Publish/Subscribe pattern, leveraging the [`SharedLib.MessageBus`](https://github.com/Guidev123/EA-SharedLib) library.
 
