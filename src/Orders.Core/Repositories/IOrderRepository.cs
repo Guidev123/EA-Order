@@ -1,14 +1,12 @@
 ﻿using Orders.Core.Entities;
+using Orders.Core.Enums;
 
 namespace Orders.Core.Repositories
 {
     public interface IOrderRepository
     {
-        Task<Order?> GetByIdAsync(Guid id);
-        Task<List<Order>?> GetAllAsync(int pageNumber, int pageSize, string customerId);
         Task CreateAsync(Order order);
-        void UpdateAsync(Order order);
-        Task<OrderItem?> GetItemByIdAsync(Guid id);
-        Task<OrderItem?> GetItemByOrder(Guid orderId, Guid productId);
+        Task CreateItensAsync(List<OrderItem> items);
+        Task UpdateOrderStatus(int status);
     }
 }

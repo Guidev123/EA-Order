@@ -5,14 +5,19 @@ namespace Orders.Core.Entities
 {
     public class Voucher : Entity, IAggregateRoot
     {
+        public Voucher()
+        {
+            
+        }
         public Voucher(string code, decimal? percentual,
                decimal? discountValue, int? quantity,
-               EDiscountType? discountType)
+               EDiscountType? discountType, DateTime expiresAt)
         {
             Code = code;
             Percentual = percentual;
             DiscountValue = discountValue;
             Quantity = quantity;
+            ExpiresAt = expiresAt;
             DiscountType = discountType ?? EDiscountType.Value;
             IsActive = true;
             CreatedAt = DateTime.Now;
@@ -22,8 +27,8 @@ namespace Orders.Core.Entities
         public decimal? DiscountValue { get; private set; }
         public int? Quantity { get; private set; }
         public EDiscountType DiscountType { get; private set; }
-        public DateTime CreatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
+        public DateTime CreatedAt { get; private set; }
         public bool IsActive { get; private set; }
 
         public void DebitQuantity()

@@ -13,7 +13,7 @@ namespace Orders.Core.Entities
             Code = Guid.NewGuid().ToString()[..8];
             CustomerId = customerId;
             TotalPrice = totalPrice;
-            _items = orderItems;
+            OrderItems = orderItems;
             Discount = discount;
             VoucherIsUsed = voucherIsUsed;
             CreatedAt = DateTime.Now;
@@ -30,9 +30,7 @@ namespace Orders.Core.Entities
         public EOrderStatus OrderStatus { get; private set; }
         public Address? Address { get; private set; }
         public Voucher? Voucher { get; private set; }
-
-        private readonly List<OrderItem> _items = [];
-        public IReadOnlyCollection<OrderItem> OrderItems => _items;
+        public List<OrderItem> OrderItems { get; private set; }
 
         public void ApplyVoucher(Voucher voucher)
         {

@@ -8,49 +8,34 @@ namespace Orders.Infrastructure.Persistence.Repositories
     public class OrderRepository(SqlConnectionFactory connectionFactory) : IOrderRepository
     {
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
+
         public async Task CreateAsync(Order order)
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"INSERT INTO Orders (Code, CustomerId, VoucherId,
-                                 VoucherIsUsed, Discount, TotalPrice, CreatedAt,
-                                 OrderStatus, Address, Voucher)
-                                 VALUES (@Code, @CustomerId, @VoucherId,
-                                 @VoucherIsUsed, @Discount, @TotalPrice, @CreatedAt,
-                                 @OrderStatus, @Address, @Voucher)";
+            const string sql = @"INSERT INTO Orders (Id, Code, CustomerId, VoucherId, VoucherIsUsed, Discount, TotalPrice, CreatedAt, OrderStatus) 
+            VALUES (@Id, @Code, @CustomerId, @VoucherId, @VoucherIsUsed, @Discount, @TotalPrice, @CreatedAt, @OrderStatus)";
 
             await connection.ExecuteAsync(sql, order);
         }
 
-        public async Task<List<Order>?> GetAllAsync(int pageNumber, int pageSize, string customerId)
+        public async Task CreateItensAsync(List<OrderItem> items)
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"SELECT * FROM Orders";
+            const string sql = @"INSERT INTO OrderItems (Id, OrderId, ProductId, ProductName, Quantity, Price, ProductImage) 
+                     VALUES (@Id, @OrderId, @ProductId, @ProductName, @Quantity, @Price, @ProductImage)";
 
-            var orders = await connection.QueryAsync<Order>(sql);
-
-            return orders.ToList();
+            await connection.ExecuteAsync(sql, items);
         }
 
-        public Task<Order?> GetByIdAsync(Guid id)
+        public async Task UpdateOrderStatus(int status)
         {
-            throw new NotImplementedException();
-        }
+            using var connection = _connectionFactory.Create();
 
-        public Task<OrderItem?> GetItemByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+            const string sql = @"SET OrderStatus = @status ";
 
-        public Task<OrderItem?> GetItemByOrder(Guid orderId, Guid productId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateAsync(Order order)
-        {
-            throw new NotImplementedException();
+            await connection.ExecuteAsync(sql, status);
         }
     }
 }

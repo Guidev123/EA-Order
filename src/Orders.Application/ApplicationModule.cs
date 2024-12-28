@@ -1,23 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Orders.Application.BackgroundServices;
-using Orders.Application.UseCases.Orders.Create;
-using Orders.Application.UseCases.Vouchers.Create;
-using SharedLib.MessageBus;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Orders.Application
 {
     public static class ApplicationModule
     {
-        public static void AddApplication(this IServiceCollection services, IConfiguration configuration) 
+        public static void AddApplication(this IServiceCollection services)
         {
-            AddUseCases(services);
+            AddMediatrHandlers(services);
         }
 
-        public static void AddUseCases(this IServiceCollection services)
-        {
-            services.AddTransient<ICreateOrderHandler, CreateOrderHandler>();
-            services.AddTransient<ICreateVoucherHandler, CreateVoucherHandler>();
-        }
+        public static void AddMediatrHandlers(this IServiceCollection services) =>
+            services.AddMediatR(x => x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     }
 }

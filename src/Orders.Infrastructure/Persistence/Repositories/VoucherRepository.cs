@@ -9,23 +9,55 @@ namespace Orders.Infrastructure.Persistence.Repositories
     {
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
 
-        public Task CreateAsync(Voucher voucher)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Voucher?> GetVoucherByCodeAsync(string code)
+        public async Task CreateAsync(Voucher voucher)
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"SELECT * FROM Vouchers WHERE Code = @Code";
+            const string sql = @"
+                INSERT INTO Vouchers 
+                (Id, Code, Percentual, DiscountValue, Quantity, DiscountType, CreatedAt, ExpiresAt, IsActive)
+                VALUES 
+                (@Id, @Code, @Percentual, @DiscountValue, @Quantity, @DiscountType, @CreatedAt, @ExpiresAt, @IsActive)";
 
-            return await connection.QueryFirstOrDefaultAsync<Voucher>(sql, code);
+            await connection.ExecuteAsync(sql, new
+            {
+                voucher.Id,
+                voucher.Code,
+                voucher.Percentual,
+                voucher.DiscountValue,
+                voucher.Quantity,
+                voucher.DiscountType,
+                voucher.CreatedAt,
+                voucher.ExpiresAt,
+                voucher.IsActive
+            });
         }
 
-        public void Update(Voucher voucher)
+        public async Task UpdateAsync(Voucher voucher)
         {
-            throw new NotImplementedException();
+            using var connection = _connectionFactory.Create();
+
+            const string sql = @"
+                UPDATE Vouchers
+                SET 
+                    Percentual = @Percentual,
+                    DiscountValue = @DiscountValue,
+                    Quantity = @Quantity,
+                    DiscountType = @DiscountType,
+                    ExpiresAt = @ExpiresAt,
+                    IsActive = @IsActive
+                WHERE Id = @Id";
+
+            await connection.ExecuteAsync(sql, new
+            {
+                voucher.Percentual,
+                voucher.DiscountValue,
+                voucher.Quantity,
+                voucher.DiscountType,
+                voucher.ExpiresAt,
+                voucher.IsActive,
+                voucher.Id
+            });
         }
     }
 }
