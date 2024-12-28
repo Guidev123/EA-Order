@@ -24,6 +24,8 @@ namespace Orders.Infrastructure
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IVoucherRepository, VoucherRepository>();
         }
     }
 }

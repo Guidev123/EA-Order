@@ -22,5 +22,6 @@ namespace Orders.Core.Entities
         public int Quantity { get; private set; }
         public decimal Price { get; private set; }
         public string? ProductImage { get; private set; }
+        internal decimal GetPrice() => Quantity * Price;
     }
 }

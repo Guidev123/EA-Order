@@ -2,9 +2,9 @@
 
 namespace Orders.Infrastructure.Persistence.Factories
 {
-    public class SqlConnectionFactory(string conncetion)
+    public class SqlConnectionFactory(string connection)
     {
-        private readonly string _conncetion = conncetion;
-        public SqlConnection Create() => new(_conncetion);
+        private readonly string _connection = connection;
+        public SqlConnection Create() => new(_connection);
     }
 }

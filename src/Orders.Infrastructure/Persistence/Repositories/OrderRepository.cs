@@ -10,7 +10,16 @@ namespace Orders.Infrastructure.Persistence.Repositories
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
         public async Task CreateAsync(Order order)
         {
+            using var connection = _connectionFactory.Create();
 
+            const string sql = @"INSERT INTO Orders (Code, CustomerId, VoucherId,
+                                 VoucherIsUsed, Discount, TotalPrice, CreatedAt,
+                                 OrderStatus, Address, Voucher)
+                                 VALUES (@Code, @CustomerId, @VoucherId,
+                                 @VoucherIsUsed, @Discount, @TotalPrice, @CreatedAt,
+                                 @OrderStatus, @Address, @Voucher)";
+
+            await connection.ExecuteAsync(sql, order);
         }
 
         public async Task<List<Order>?> GetAllAsync(int pageNumber, int pageSize, string customerId)

@@ -7,12 +7,15 @@ using System.Data.Common;
 namespace Orders.Infrastructure.Persistence.Repositories
 {
     public class UnitOfWork(SqlConnectionFactory connectionFactory,
-                            IOrderRepository orderRepository) : IUnitOfWork, IDisposable
+                            IOrderRepository orderRepository,
+                            IVoucherRepository voucherRepository)
+                          : IUnitOfWork, IDisposable
     {
         private readonly SqlConnection _connection = connectionFactory.Create();
         private DbTransaction? _transaction;
 
-        IOrderRepository IUnitOfWork.OrderRepository => orderRepository;
+        public IOrderRepository Orders => orderRepository;
+        public IVoucherRepository Vouchers => voucherRepository;
 
         public async Task BeginTransaction()
         {
@@ -27,7 +30,6 @@ namespace Orders.Infrastructure.Persistence.Repositories
             if (_transaction is null) return false;
 
             await _transaction.CommitAsync();
-            await DisposeTransaction();
             return true;
         }
 
@@ -36,17 +38,7 @@ namespace Orders.Infrastructure.Persistence.Repositories
             if (_transaction is null) return false;
 
             await _transaction.RollbackAsync();
-            await DisposeTransaction();
             return true;
-        }
-
-        private async Task DisposeTransaction()
-        {
-            if (_transaction is not null)
-            {
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
         }
 
         public void Dispose()
@@ -55,6 +47,13 @@ namespace Orders.Infrastructure.Persistence.Repositories
                 _connection.Close();
 
             _connection.Dispose();
+
+            if (_transaction is not null)
+            {
+                _transaction.Dispose();
+                _transaction = null;
+            }
+
             GC.SuppressFinalize(this);
         }
     }

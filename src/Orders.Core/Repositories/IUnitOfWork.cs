@@ -2,7 +2,8 @@
 {
     public interface IUnitOfWork : IDisposable
     {
-        IOrderRepository OrderRepository { get; }
+        IOrderRepository Orders { get; }
+        IVoucherRepository Vouchers { get; }
         Task BeginTransaction();
         Task<bool> Commit();
         Task<bool> Rollback();
