@@ -15,9 +15,13 @@ namespace Orders.Infrastructure.Persistence.Repositories
 
             const string sql = @"
                 INSERT INTO Vouchers 
-                (Id, Code, Percentual, DiscountValue, Quantity, DiscountType, CreatedAt, ExpiresAt, IsActive)
+                (Id, Code, Percentual,
+                DiscountValue, Quantity, DiscountType,
+                CreatedAt, ExpiresAt, IsActive)
                 VALUES 
-                (@Id, @Code, @Percentual, @DiscountValue, @Quantity, @DiscountType, @CreatedAt, @ExpiresAt, @IsActive)";
+                (@Id, @Code, @Percentual,
+                 @DiscountValue, @Quantity, @DiscountType,
+                 @CreatedAt, @ExpiresAt, @IsActive)";
 
             await connection.ExecuteAsync(sql, new
             {

@@ -13,20 +13,32 @@ namespace Orders.Infrastructure.Persistence.Repositories
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"INSERT INTO Orders (Id, Code, CustomerId, VoucherId, VoucherIsUsed, Discount, TotalPrice, CreatedAt, OrderStatus) 
-            VALUES (@Id, @Code, @CustomerId, @VoucherId, @VoucherIsUsed, @Discount, @TotalPrice, @CreatedAt, @OrderStatus)";
+            const string sql = @"
+            INSERT INTO Orders (Id, Code, CustomerId,
+            VoucherId, VoucherIsUsed, Discount,
+            TotalPrice, CreatedAt, OrderStatus) 
+            VALUES (@Id, @Code, @CustomerId,
+                    @VoucherId, @VoucherIsUsed,
+                    @Discount, @TotalPrice,
+                    @CreatedAt, @OrderStatus)";
 
             await connection.ExecuteAsync(sql, order);
         }
 
-        public async Task CreateItensAsync(List<OrderItem> items)
+        public async Task CreateItensAsync(OrderItem item)
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"INSERT INTO OrderItems (Id, OrderId, ProductId, ProductName, Quantity, Price, ProductImage) 
-                     VALUES (@Id, @OrderId, @ProductId, @ProductName, @Quantity, @Price, @ProductImage)";
+            const string sql = @"
+                    INSERT INTO OrderItems 
+                    (Id, OrderId, ProductId,
+                    ProductName, Quantity,
+                    Price, ProductImage) 
+                    VALUES (@Id, @OrderId, @ProductId,
+                             @ProductName, @Quantity,
+                             @Price, @ProductImage)";
 
-            await connection.ExecuteAsync(sql, items);
+            await connection.ExecuteAsync(sql, item);
         }
 
         public async Task UpdateOrderStatus(int status)

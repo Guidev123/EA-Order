@@ -6,7 +6,7 @@ namespace Orders.Core.Repositories
     public interface IOrderRepository
     {
         Task CreateAsync(Order order);
-        Task CreateItensAsync(List<OrderItem> items);
+        Task CreateItensAsync(OrderItem item);
         Task UpdateOrderStatus(int status);
     }
 }

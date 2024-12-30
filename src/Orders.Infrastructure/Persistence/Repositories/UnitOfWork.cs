@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using MediatR;
+using Microsoft.Data.SqlClient;
+using Orders.Core.DomainObjects;
 using Orders.Core.Repositories;
 using Orders.Infrastructure.Persistence.Factories;
 using System.Data;
@@ -8,11 +10,13 @@ namespace Orders.Infrastructure.Persistence.Repositories
 {
     public class UnitOfWork(SqlConnectionFactory connectionFactory,
                             IOrderRepository orderRepository,
-                            IVoucherRepository voucherRepository)
+                            IVoucherRepository voucherRepository,
+                            IPublisher publisher)
                           : IUnitOfWork, IDisposable
     {
         private readonly SqlConnection _connection = connectionFactory.Create();
         private DbTransaction? _transaction;
+        private readonly IPublisher _publisher = publisher; 
 
         public IOrderRepository Orders => orderRepository;
         public IVoucherRepository Vouchers => voucherRepository;
@@ -55,6 +59,15 @@ namespace Orders.Infrastructure.Persistence.Repositories
             }
 
             GC.SuppressFinalize(this);
+        }
+
+        public async Task PublishDomainEventsAsync<TEntity>(TEntity entity)
+            where TEntity : Entity
+        {
+            foreach (var domainEvent in entity.Events)
+                await _publisher.Publish(domainEvent);
+
+            entity.ClearAllEvents();
         }
     }
 }
