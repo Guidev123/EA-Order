@@ -7,7 +7,7 @@ namespace Orders.Core.Repositories
         IOrderRepository Orders { get; }
         IVoucherRepository Vouchers { get; }
         Task PublishDomainEventsAsync<TEntity>(TEntity entity) where TEntity : Entity;
-        Task BeginTransaction();
+        Task BeginTransactionAsync();
         Task<bool> Commit();
         Task<bool> Rollback();
     }

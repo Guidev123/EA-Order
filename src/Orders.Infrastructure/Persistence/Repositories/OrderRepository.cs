@@ -13,41 +13,39 @@ namespace Orders.Infrastructure.Persistence.Repositories
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"
-            INSERT INTO Orders (Id, Code, CustomerId,
-            VoucherId, VoucherIsUsed, Discount,
-            TotalPrice, CreatedAt, OrderStatus) 
-            VALUES (@Id, @Code, @CustomerId,
-                    @VoucherId, @VoucherIsUsed,
-                    @Discount, @TotalPrice,
-                    @CreatedAt, @OrderStatus)";
+            const string sql = @"INSERT INTO Orders
+                                     (Id, Code, CustomerId, VoucherId, VouchersUsed, Discount, TotalPrice, 
+                                     CreatedAt, OrderStatus, Street, Number, AdditionalInfo, Neighborhood, ZipCode, City, State)
+                                 VALUES
+                                    (@Id, @Code, @CustomerId, @VoucherId, @VoucherIsUsed, @Discount, @TotalPrice, 
+                                    @CreatedAt, @OrderStatus, @Street, @Number, @AdditionalInfo, @Neighborhood, 
+                                    @ZipCode, @City, @State);";
 
             await connection.ExecuteAsync(sql, order);
         }
 
-        public async Task CreateItensAsync(OrderItem item)
+        public async Task CreateOrderItensAsync(IEnumerable<OrderItem> itens)
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"
-                    INSERT INTO OrderItems 
-                    (Id, OrderId, ProductId,
-                    ProductName, Quantity,
-                    Price, ProductImage) 
-                    VALUES (@Id, @OrderId, @ProductId,
-                             @ProductName, @Quantity,
-                             @Price, @ProductImage)";
+            const string sql = @"INSERT INTO OrderItems
+                                    (Id, OrderId, ProductId, ProductName, Quantity, UnitValue, ProductImage)
+                               VALUES
+                                    (@Id, @OrderId, @ProductId, @ProductName, @Quantity, @Price, @ProductImage);";
 
-            await connection.ExecuteAsync(sql, item);
+            var orderItens = itens.Select(item => new
+            {
+                item.Id,
+                item.OrderId,
+                item.ProductId,
+                item.ProductName,
+                item.Quantity,
+                item.Price,
+                item.ProductImage
+            });
+
+            await connection.ExecuteAsync(sql, orderItens);
         }
 
-        public async Task UpdateOrderStatus(int status)
-        {
-            using var connection = _connectionFactory.Create();
-
-            const string sql = @"SET OrderStatus = @status ";
-
-            await connection.ExecuteAsync(sql, status);
-        }
     }
 }

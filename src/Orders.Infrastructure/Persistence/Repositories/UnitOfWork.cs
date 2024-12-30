@@ -21,7 +21,7 @@ namespace Orders.Infrastructure.Persistence.Repositories
         public IOrderRepository Orders => orderRepository;
         public IVoucherRepository Vouchers => voucherRepository;
 
-        public async Task BeginTransaction()
+        public async Task BeginTransactionAsync()
         {
             if (_connection.State == ConnectionState.Closed)
                 await _connection.OpenAsync();
