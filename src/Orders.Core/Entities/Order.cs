@@ -6,7 +6,7 @@ namespace Orders.Core.Entities
 {
     public class Order : Entity, IAggregateRoot
     {
-        public Order(string customerId, decimal totalPrice,
+        public Order(Guid customerId, decimal totalPrice,
                      List<OrderItem> orderItems,
                      bool voucherIsUsed = false, decimal discount = 0)
         {
@@ -21,7 +21,7 @@ namespace Orders.Core.Entities
         }
 
         public string Code { get; private set; } = string.Empty;
-        public string CustomerId { get; private set; } = string.Empty;
+        public Guid CustomerId { get; private set; }
         public Guid? VoucherId { get; private set; }
         public bool VoucherIsUsed { get; private set; }
         public decimal Discount { get; private set; }

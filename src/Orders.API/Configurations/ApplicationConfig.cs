@@ -4,7 +4,7 @@
     {
         public static void AddApplicationConfig(this WebApplicationBuilder builder)
         {
-            
+            builder.Services.AddHttpContextAccessor();
         }
     }
 }

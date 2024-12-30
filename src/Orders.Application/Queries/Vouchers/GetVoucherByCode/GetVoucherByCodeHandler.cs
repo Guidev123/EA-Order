@@ -11,7 +11,10 @@ namespace Orders.Application.Queries.Vouchers.GetVoucherByCode
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<Response<GetVoucherByCodeResponse>> Handle(GetVoucherByCodeQuery request, CancellationToken cancellationToken)
         {
-            return new(null);
+            var voucher = await _unitOfWork.Vouchers.GetByCodeAsync(request.Code);
+            if (voucher is null) return new(null, 404, "Vocher not found");
+            
+            return new(new(voucher.Percentual, voucher.DiscountValue, voucher.Code, voucher.DiscountType), 200);
         }
     }
 }

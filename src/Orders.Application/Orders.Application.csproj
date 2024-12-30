@@ -12,9 +12,11 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\SharedLib\src\SharedLib.MessageBus\SharedLib.MessageBus.csproj" />
     <ProjectReference Include="..\Orders.Core\Orders.Core.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿using Orders.Core.DomainEvents;
+﻿using Orders.Core.Events;
 
 namespace Orders.Core.DomainObjects
 {

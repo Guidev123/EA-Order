@@ -5,6 +5,7 @@ using Orders.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddApplicationConfig();
 builder.Services.AddInfra();
 builder.Services.AddApplication();
 builder.AddDocumentationConfig();

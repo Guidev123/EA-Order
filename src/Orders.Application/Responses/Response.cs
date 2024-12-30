@@ -19,12 +19,15 @@ namespace Orders.Application.Responses
             Data = data;
             Message = message;
             _code = code;
+            StatusCode = _code;
             Errors = errors;
         }
 
         public TData? Data { get; set; }
         public string? Message { get; set; }
         public string[]? Errors { get; set; }
+        [JsonIgnore]
+        public int StatusCode { get; set; }
 
         [JsonIgnore]
         public bool IsSuccess

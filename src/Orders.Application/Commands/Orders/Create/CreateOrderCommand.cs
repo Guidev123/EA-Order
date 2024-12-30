@@ -6,7 +6,7 @@ namespace Orders.Application.Commands.Orders.Create
 {
     public class CreateOrderCommand : IRequest<Response<CreateOrderResponse>>
     {
-        public CreateOrderCommand(string customerId, decimal totalPrice,
+        public CreateOrderCommand(Guid customerId, decimal totalPrice,
                           List<OrderItemDTO> orderItems, string voucherCode,
                           bool voucherIsUsed, decimal discount, AddressDTO address)
         {
@@ -19,7 +19,7 @@ namespace Orders.Application.Commands.Orders.Create
             Address = address;
         }
 
-        public string CustomerId { get; private set; }
+        public Guid CustomerId { get; private set; }
         public decimal TotalPrice { get; private set; }
         public List<OrderItemDTO> OrderItems { get; private set; }
         public string VoucherCode { get; private set; }
@@ -27,6 +27,6 @@ namespace Orders.Application.Commands.Orders.Create
         public decimal Discount { get; private set; }
         public AddressDTO Address { get; private set; }
 
-        public void SetCustomerId(string customerId) => CustomerId = customerId;
+        public void SetCustomerId(Guid customerId) => CustomerId = customerId;
     }
 }

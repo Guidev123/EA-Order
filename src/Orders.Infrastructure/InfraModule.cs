@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Orders.Application.Services;
 using Orders.Core.Repositories;
 using Orders.Infrastructure.Persistence.Factories;
 using Orders.Infrastructure.Persistence.Repositories;
+using Orders.Infrastructure.Services;
 
 namespace Orders.Infrastructure
 {
@@ -11,8 +13,12 @@ namespace Orders.Infrastructure
         public static void AddInfra(this IServiceCollection services)
         {
             services.AddRepositories();
+            services.AddServices();
         }
-
+        public static void AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserService>();
+        }
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddSingleton(sp =>

@@ -1,4 +1,4 @@
-﻿namespace Orders.Core.DomainEvents
+﻿namespace Orders.Core.Events
 {
     public abstract class Event
     {

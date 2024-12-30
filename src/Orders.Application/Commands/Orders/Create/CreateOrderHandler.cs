@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using Orders.Application.Events.Factories;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
 using Orders.Core.Entities;
@@ -15,6 +16,8 @@ namespace Orders.Application.Commands.Orders.Create
         public async Task<Response<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var order = request.MapToEntity();
+            order.ApplyAddress(request.Address.MapToAddress());
+
             var validation = ValidateEntity(new OrderValidator(), order);
 
             if (!validation.IsValid)
@@ -33,11 +36,14 @@ namespace Orders.Application.Commands.Orders.Create
                     return new(null, 400, "Error", GetAllErrors(validation));
                 }
 
-                // TODO: Process Payment
                 order.AuthorizeOrder();
 
                 await _unitOfWork.Orders.CreateAsync(order);
                 await _unitOfWork.Orders.CreateOrderItensAsync(order.OrderItems);
+
+                order.AddEvent(OrderEventFactory.CreateOrderCreatedEvent(order));
+
+                await _unitOfWork.PublishDomainEventsAsync(order);
 
                 await _unitOfWork.Commit();
 
@@ -55,7 +61,7 @@ namespace Orders.Application.Commands.Orders.Create
         {
             if (!command.VoucherIsUsed) return true;
 
-            var voucher = await _unitOfWork.Vouchers.GetByCode(command.VoucherCode);
+            var voucher = await _unitOfWork.Vouchers.GetByCodeAsync(command.VoucherCode);
             if (voucher is null)
             {
                 AddError(validationResult, "Voucher not found");

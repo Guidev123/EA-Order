@@ -37,7 +37,7 @@ namespace Orders.Infrastructure.Persistence.Repositories
             });
         }
 
-        public async Task<Voucher?> GetByCode(string code)
+        public async Task<Voucher?> GetByCodeAsync(string code)
         {
             using var connection = _connectionFactory.Create();
 
