@@ -1,5 +1,6 @@
 ﻿using Orders.Core.DomainObjects;
 using Orders.Core.Enums;
+using Orders.Core.Events;
 using Orders.Core.ValueObjects;
 
 namespace Orders.Core.Entities
@@ -18,6 +19,7 @@ namespace Orders.Core.Entities
             VoucherIsUsed = voucherIsUsed;
             CreatedAt = DateTime.Now;
             OrderStatus = EOrderStatus.WaitingPyment;
+            AddEvent(new OrderCreatedEvent(CustomerId));
         }
 
         public string Code { get; private set; } = string.Empty;
