@@ -9,43 +9,51 @@ namespace Orders.Infrastructure.Persistence.Repositories
     {
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
 
-        public async Task CreateAsync(Order order)
+        public async Task<bool> CreateAsync(Order order)
         {
             using var connection = _connectionFactory.Create();
 
-            const string sql = @"INSERT INTO Orders
-                                     (Id, Code, CustomerId, VoucherId, VouchersUsed, Discount, TotalPrice, 
-                                     CreatedAt, OrderStatus, Street, Number, AdditionalInfo, Neighborhood, ZipCode, City, State)
-                                 VALUES
+            using var transaction = await connection.BeginTransactionAsync();
+
+            try
+            {
+                const string sqlOrder = @"INSERT INTO Orders
+                                    (Id, Code, CustomerId, VoucherId, VouchersUsed, Discount, TotalPrice, 
+                                    CreatedAt, OrderStatus, Street, Number, AdditionalInfo, Neighborhood, ZipCode, City, State)
+                                VALUES
                                     (@Id, @Code, @CustomerId, @VoucherId, @VoucherIsUsed, @Discount, @TotalPrice, 
                                     @CreatedAt, @OrderStatus, @Street, @Number, @AdditionalInfo, @Neighborhood, 
                                     @ZipCode, @City, @State);";
 
-            await connection.ExecuteAsync(sql, order);
-        }
+                await connection.ExecuteAsync(sqlOrder, order, transaction);
 
-        public async Task CreateOrderItensAsync(IEnumerable<OrderItem> itens)
-        {
-            using var connection = _connectionFactory.Create();
-
-            const string sql = @"INSERT INTO OrderItems
+                const string sqlItems = @"INSERT INTO OrderItems
                                     (Id, OrderId, ProductId, ProductName, Quantity, UnitValue, ProductImage)
-                               VALUES
-                                    (@Id, @OrderId, @ProductId, @ProductName, @Quantity, @Price, @ProductImage);";
+                                VALUES
+                                    (@Id, @OrderId, @ProductId, @ProductName, @Quantity, @UnitValue, @ProductImage);";
 
-            var orderItens = itens.Select(item => new
+                var orderItens = order.OrderItems.Select(item => new
+                {
+                    item.Id,
+                    item.OrderId,
+                    item.ProductId,
+                    item.ProductName,
+                    item.Quantity,
+                    item.UnitValue,
+                    item.ProductImage
+                });
+
+                await connection.ExecuteAsync(sqlItems, orderItens, transaction);
+
+                await transaction.CommitAsync();
+
+                return true;
+            }
+            catch
             {
-                item.Id,
-                item.OrderId,
-                item.ProductId,
-                item.ProductName,
-                item.Quantity,
-                item.Price,
-                item.ProductImage
-            });
-
-            await connection.ExecuteAsync(sql, orderItens);
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
-
     }
 }

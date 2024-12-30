@@ -23,37 +23,24 @@ namespace Orders.Application.Commands.Orders.Create
             if (!validation.IsValid)
                 return new(null, 400, "Error", GetAllErrors(validation));
 
-            await _unitOfWork.BeginTransactionAsync();
-            
-            try
+            if (!await ApplyVoucherAsync(request, order, validation))
+                return new(null, 400, "Error", GetAllErrors(validation));
+
+            if (!ValidateOrder(order))
             {
-                if (!await ApplyVoucherAsync(request, order, validation))
-                    return new(null, 400, "Error", GetAllErrors(validation));
-
-                if (!ValidateOrder(order))
-                {
-                    AddError(validation, "Order price is not correct");
-                    return new(null, 400, "Error", GetAllErrors(validation));
-                }
-
-                order.AuthorizeOrder();
-
-                await _unitOfWork.Orders.CreateAsync(order);
-                await _unitOfWork.Orders.CreateOrderItensAsync(order.OrderItems);
-
-                order.AddEvent(OrderEventFactory.OrderCreatedProjectionEventFactory(order));
-
-                await _unitOfWork.PublishDomainEventsAsync(order);
-
-                await _unitOfWork.Commit();
-
-                return new(new(order.Code), 201);
+                AddError(validation, "Order price is not correct");
+                return new(null, 400, "Error", GetAllErrors(validation));
             }
-            catch
-            {
-                await _unitOfWork.Rollback();
-                return new(null, 400, "Fail to persist data");
-            }
+
+            order.AuthorizeOrder();
+
+            var result = await _unitOfWork.Orders.CreateAsync(order);
+            if (!result) return new(null, 400, "Something has failed to persist data");
+
+            order.AddEvent(OrderEventFactory.OrderCreatedProjectionEventFactory(order));
+            await _unitOfWork.PublishDomainEventsAsync(order);
+
+            return new(new(order.Code), 201);
         }
 
         #region Validators Methods
