@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationConfig();
 builder.Services.AddInfra();
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.AddDocumentationConfig();
 builder.AddJwtConfiguration();
 builder.Services.AddOpenApi();

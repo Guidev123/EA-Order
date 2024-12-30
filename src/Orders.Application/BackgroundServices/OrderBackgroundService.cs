@@ -6,7 +6,7 @@ namespace Orders.Application.BackgroundServices
     {
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

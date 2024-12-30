@@ -5,16 +5,26 @@ namespace Orders.Core.DomainObjects
     public abstract class Entity
     {
         protected Entity() => Id = Guid.NewGuid();
+
         public Guid Id { get; }
 
-        private List<Event> _events = [];
-        public IReadOnlyCollection<Event> Events => _events.AsReadOnly();
-        public void AddEvent(Event @event)
+        private List<IDomainEvent> _events = [];
+        public IReadOnlyCollection<IDomainEvent> Events => _events.AsReadOnly();
+
+        public void AddEvent(IDomainEvent @event)
         {
-            _events ??= [];
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
+
             _events.Add(@event);
-        } 
-        public void RemoveEvent(Event @event) => _events.Remove(@event);
+        }
+
+        public void RemoveEvent(IDomainEvent @event)
+        {
+            ArgumentNullException.ThrowIfNull(@event);
+
+            _events.Remove(@event);
+        }
+
         public void ClearAllEvents() => _events.Clear();
 
         public override bool Equals(object? obj)
@@ -26,6 +36,7 @@ namespace Orders.Core.DomainObjects
 
             return Id.Equals(compareTo.Id);
         }
+
         public static bool operator ==(Entity a, Entity b)
         {
             if (a is null && b is null)
@@ -35,8 +46,11 @@ namespace Orders.Core.DomainObjects
 
             return a.Equals(b);
         }
+
         public static bool operator !=(Entity a, Entity b) => !(a == b);
+
         public override int GetHashCode() => (GetType().GetHashCode() * 907) + Id.GetHashCode();
-        public override string ToString() => $"{GetType().Name} [Id ={Id}";
+
+        public override string ToString() => $"{GetType().Name} [Id={Id}]";
     }
 }

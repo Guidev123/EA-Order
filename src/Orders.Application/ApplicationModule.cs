@@ -8,9 +8,10 @@ namespace Orders.Application
 {
     public static class ApplicationModule
     {
-        public static void AddApplication(this IServiceCollection services)
+        public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             AddMediatrHandlers(services);
+            RegisterBackgroundService(services, configuration);
         }
 
         public static void AddMediatrHandlers(this IServiceCollection services) =>
