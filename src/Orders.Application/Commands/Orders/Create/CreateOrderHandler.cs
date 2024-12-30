@@ -41,7 +41,7 @@ namespace Orders.Application.Commands.Orders.Create
                 await _unitOfWork.Orders.CreateAsync(order);
                 await _unitOfWork.Orders.CreateOrderItensAsync(order.OrderItems);
 
-                order.AddEvent(OrderEventFactory.CreateOrderCreatedEvent(order));
+                order.AddEvent(OrderEventFactory.OrderCreatedProjectionEventFactory(order));
 
                 await _unitOfWork.PublishDomainEventsAsync(order);
 
