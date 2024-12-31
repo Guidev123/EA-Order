@@ -21,6 +21,7 @@ namespace Orders.Application
         {
             services.AddMessageBus(configuration.GetMessageQueueConnection("MessageBus"));
             services.AddHostedService<OrderBackgroundService>();
+            services.AddHostedService<VoucherBackgroundService>();
         }
     }
 }

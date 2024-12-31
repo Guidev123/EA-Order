@@ -2,7 +2,6 @@
 using Microsoft.Data.SqlClient;
 using Orders.Application.Events;
 using Orders.Core.DomainObjects;
-using Orders.Core.Events;
 using Orders.Core.Repositories;
 using Orders.Infrastructure.Persistence.Factories;
 using System.Data;
@@ -68,7 +67,7 @@ namespace Orders.Infrastructure.Persistence.Repositories
         {
             foreach (var domainEvent in entity.Events)
             {
-                var notification = Activator.CreateInstance(typeof(DomainEventNotification<>)
+                var notification = Activator.CreateInstance(typeof(EventNotification<>)
                     .MakeGenericType(domainEvent.GetType()), domainEvent);
 
                 if (notification is not null) await _publisher.Publish(notification);

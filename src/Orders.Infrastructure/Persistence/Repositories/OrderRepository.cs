@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
 using Orders.Infrastructure.Persistence.Contexts;
@@ -6,7 +7,8 @@ using Orders.Infrastructure.Persistence.Factories;
 
 namespace Orders.Infrastructure.Persistence.Repositories
 {
-    public class OrderRepository(SqlConnectionFactory connectionFactory, ReadDbContext context) : IOrderRepository
+    public class OrderRepository(SqlConnectionFactory connectionFactory, ReadDbContext context)
+               : IOrderRepository
     {
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
         private readonly ReadDbContext _context = context;
@@ -71,5 +73,8 @@ namespace Orders.Infrastructure.Persistence.Repositories
 
         public async Task CreateToProjectionAsync(Order order) =>
             await _context.Orders.AddAsync(order);
+
+        public async Task<Order?> GetByCodeAsync(string code) =>
+            await _context.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.Code == code);
     }
 }

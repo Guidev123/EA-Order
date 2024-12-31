@@ -6,7 +6,7 @@ using Orders.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationConfig();
-builder.Services.AddInfra();
+builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.AddDocumentationConfig();
 builder.AddJwtConfiguration();

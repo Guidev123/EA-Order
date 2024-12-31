@@ -1,9 +1,11 @@
 ﻿using FluentValidation.Results;
 using MediatR;
-using Orders.Application.Events.Factories;
+using Orders.Application.Events;
+using Orders.Application.Events.Orders;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
 using Orders.Core.Entities;
+using Orders.Core.Events;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
 
@@ -37,7 +39,7 @@ namespace Orders.Application.Commands.Orders.Create
             var result = await _unitOfWork.Orders.CreateAsync(order);
             if (!result) return new(null, 400, "Something has failed to persist data");
 
-            order.AddEvent(OrderEventFactory.OrderCreatedProjectionEventFactory(order));
+            order.AddEvent(new OrderCreatedProjectionEvent(order));
             await _unitOfWork.PublishDomainEventsAsync(order);
 
             return new(new(order.Code), 201);

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
 using Orders.Infrastructure.Persistence.Contexts;
@@ -38,8 +39,11 @@ namespace Orders.Infrastructure.Persistence.Repositories
             });
         }
 
+        public async Task CreateToProjectionAsync(Voucher voucher) =>
+            await _context.Vouchers.AddAsync(voucher);
+
         public async Task<Voucher?> GetByCodeAsync(string code) =>
-            await _context.Vouchers.FindAsync(code);
+            await _context.Vouchers.FirstOrDefaultAsync(x => x.Code == code);
 
         public async Task UpdateAsync(Voucher voucher)
         {

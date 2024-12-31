@@ -1,30 +1,32 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Orders.Application.Events.Orders;
+using Orders.Application.Events.Vouchers;
+using Orders.Application.Mappers;
 using Orders.Core.Repositories;
 using SharedLib.MessageBus;
 
 namespace Orders.Application.BackgroundServices
 {
-    public sealed class OrderBackgroundService(IMessageBus bus, IServiceProvider serviceProvider)
+    public sealed class VoucherBackgroundService(IMessageBus bus, IServiceProvider serviceProvider)
                       : BackgroundService
     {
         private readonly IMessageBus _bus = bus;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
-        private void SetSubscriber() =>
-            _bus.SubscribeAsync<OrderCreatedProjectionEvent>("OrderCreatedProjectionEvent", OrderProjectionAsync);
 
-        private async Task OrderProjectionAsync(OrderCreatedProjectionEvent projectionEvent)
+        private void SetSubscribers() =>
+            _bus.SubscribeAsync<VoucherCreatedProjectionEvent>("VoucherCreatedProjectionEvent", VoucherProjectionAsync);
+
+        private async Task VoucherProjectionAsync(VoucherCreatedProjectionEvent projectionEvent)
         {
             using var scope = _serviceProvider.CreateScope();
             var respository = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-            await respository.Orders.CreateToProjectionAsync(projectionEvent.Order);
+            await respository.Vouchers.CreateToProjectionAsync(projectionEvent.Voucher.MapToEntity());
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            SetSubscriber();
+            SetSubscribers();
             return Task.CompletedTask;
         }
     }
