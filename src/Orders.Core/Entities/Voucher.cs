@@ -5,10 +5,7 @@ namespace Orders.Core.Entities
 {
     public class Voucher : Entity, IAggregateRoot
     {
-        public Voucher()
-        {
-            
-        }
+        protected Voucher() { }
         public Voucher(string code, decimal? percentual,
                decimal? discountValue, int? quantity,
                EDiscountType? discountType, DateTime expiresAt)

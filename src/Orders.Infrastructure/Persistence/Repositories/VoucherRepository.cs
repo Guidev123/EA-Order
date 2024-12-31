@@ -1,14 +1,15 @@
 ﻿using Dapper;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
+using Orders.Infrastructure.Persistence.Contexts;
 using Orders.Infrastructure.Persistence.Factories;
 
 namespace Orders.Infrastructure.Persistence.Repositories
 {
-    public class VoucherRepository(SqlConnectionFactory connectionFactory) : IVoucherRepository
+    public class VoucherRepository(SqlConnectionFactory connectionFactory, ReadDbContext context) : IVoucherRepository
     {
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
-
+        private readonly ReadDbContext _context = context;
         public async Task CreateAsync(Voucher voucher)
         {
             using var connection = _connectionFactory.Create();
@@ -37,19 +38,8 @@ namespace Orders.Infrastructure.Persistence.Repositories
             });
         }
 
-        public async Task<Voucher?> GetByCodeAsync(string code)
-        {
-            using var connection = _connectionFactory.Create();
-
-            const string sql = @"SELECT * FROM Vouchers 
-                                    WHERE   
-                                        IsActive = 1 
-                                        AND Quantity > 0 
-                                        AND ExpiresAt > GETDATE()
-                                        AND Code = @Code;";
-
-            return await connection.QueryFirstOrDefaultAsync<Voucher>(sql, new { Code = code });
-        }
+        public async Task<Voucher?> GetByCodeAsync(string code) =>
+            await _context.Vouchers.FindAsync(code);
 
         public async Task UpdateAsync(Voucher voucher)
         {
