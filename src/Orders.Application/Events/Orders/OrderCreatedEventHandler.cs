@@ -2,7 +2,7 @@
 using Orders.Core.Events;
 using SharedLib.MessageBus;
 
-namespace Orders.Application.Events.EventHandlers
+namespace Orders.Application.Events.Orders
 {
     public sealed class OrderCreatedEventHandler(IMessageBus bus)
                       : INotificationHandler<EventNotification<OrderCreatedEvent>>

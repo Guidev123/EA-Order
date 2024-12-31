@@ -1,8 +1,7 @@
 ﻿using MediatR;
-using Orders.Application.Events.Orders;
 using SharedLib.MessageBus;
 
-namespace Orders.Application.Events.EventHandlers
+namespace Orders.Application.Events.Orders
 {
     public sealed class OrderCreatedProjectionEventHandler(IMessageBus bus)
                       : INotificationHandler<EventNotification<OrderCreatedProjectionEvent>>

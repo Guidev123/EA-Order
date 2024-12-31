@@ -1,8 +1,7 @@
 ﻿using MediatR;
-using Orders.Application.Events.Vouchers;
 using SharedLib.MessageBus;
 
-namespace Orders.Application.Events.EventHandlers
+namespace Orders.Application.Events.Vouchers
 {
     public sealed class VoucherCreatedProjectionEventHandler(IMessageBus bus)
                       : INotificationHandler<EventNotification<VoucherCreatedProjectionEvent>>
