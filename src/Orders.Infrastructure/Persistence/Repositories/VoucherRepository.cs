@@ -1,16 +1,16 @@
 ﻿using Dapper;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
-using Orders.Infrastructure.Persistence.Contexts;
 using Orders.Infrastructure.Persistence.Factories;
 
 namespace Orders.Infrastructure.Persistence.Repositories
 {
-    public class VoucherRepository(SqlConnectionFactory connectionFactory, ReadDbContext context) : IVoucherRepository
+    public class VoucherRepository(SqlConnectionFactory connectionFactory, IMongoDatabase mongoDatabase)
+               : IVoucherRepository
     {
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
-        private readonly ReadDbContext _context = context;
+        private readonly IMongoCollection<Voucher> _voucherCollection = mongoDatabase.GetCollection<Voucher>("vouchers");
         public async Task CreateAsync(Voucher voucher)
         {
             using var connection = _connectionFactory.Create();
@@ -39,11 +39,6 @@ namespace Orders.Infrastructure.Persistence.Repositories
             });
         }
 
-        public async Task CreateToProjectionAsync(Voucher voucher) =>
-            await _context.Vouchers.AddAsync(voucher);
-
-        public async Task<Voucher?> GetByCodeAsync(string code) =>
-            await _context.Vouchers.FirstOrDefaultAsync(x => x.Code == code);
 
         public async Task UpdateAsync(Voucher voucher)
         {
@@ -70,5 +65,11 @@ namespace Orders.Infrastructure.Persistence.Repositories
                 voucher.Id
             });
         }
+
+        public async Task CreateToProjectionAsync(Voucher voucher) 
+            => await _voucherCollection.InsertOneAsync(voucher);
+
+        public async Task<Voucher?> GetByCodeAsync(string code)
+            => await _voucherCollection.Find(c => c.Code == code).SingleOrDefaultAsync();
     }
 }

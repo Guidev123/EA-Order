@@ -1,17 +1,16 @@
 ﻿using Dapper;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
-using Orders.Infrastructure.Persistence.Contexts;
 using Orders.Infrastructure.Persistence.Factories;
 
 namespace Orders.Infrastructure.Persistence.Repositories
 {
-    public class OrderRepository(SqlConnectionFactory connectionFactory, ReadDbContext context)
+    public class OrderRepository(SqlConnectionFactory connectionFactory, IMongoDatabase mongoDatabase)
                : IOrderRepository
     {
         private readonly SqlConnectionFactory _connectionFactory = connectionFactory;
-        private readonly ReadDbContext _context = context;
+        private readonly IMongoCollection<Order> _orderCollection = mongoDatabase.GetCollection<Order>("orders");
         public async Task<bool> CreateAsync(Order order)
         {
             using var connection = _connectionFactory.Create();
@@ -71,10 +70,10 @@ namespace Orders.Infrastructure.Persistence.Repositories
             }
         }
 
-        public async Task CreateToProjectionAsync(Order order) =>
-            await _context.Orders.AddAsync(order);
+        public async Task CreateToProjectionAsync(Order order)
+            => await _orderCollection.InsertOneAsync(order);
 
-        public async Task<Order?> GetByCodeAsync(string code) =>
-            await _context.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.Code == code);
+        public async Task<Order?> GetByCodeAsync(string code)
+            => await _orderCollection.Find(c => c.Code == code).SingleOrDefaultAsync();
     }
 }

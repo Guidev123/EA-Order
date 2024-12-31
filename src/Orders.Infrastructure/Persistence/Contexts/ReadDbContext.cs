@@ -1,18 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.EntityFrameworkCore.Extensions;
-using Orders.Core.Entities;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 
 namespace Orders.Infrastructure.Persistence.Contexts
 {
-    public class ReadDbContext(DbContextOptions<ReadDbContext> options) : DbContext(options)
+    public class ReadDbContext
     {
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Voucher> Vouchers { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        private readonly IConfiguration _configuration;
+        private readonly IMongoDatabase? _database;
+        public ReadDbContext(IConfiguration configuration)
         {
-            modelBuilder.Entity<Order>().ToCollection("Orders");
-            modelBuilder.Entity<Voucher>().ToCollection("Vouchers");
+            _configuration = configuration;
+
+            string connectionString = _configuration.GetConnectionString("ReadDbContext") ?? string.Empty;
+
+            MongoUrl mongoUrl = MongoUrl.Create(connectionString);
+            MongoClient mongoClient = new(mongoUrl);
+
+            _database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
         }
+        public IMongoDatabase? Database => _database;
     }
 }

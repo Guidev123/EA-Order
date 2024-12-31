@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using Orders.Application.Services;
 using Orders.Core.Repositories;
 using Orders.Infrastructure.Persistence.Contexts;
 using Orders.Infrastructure.Persistence.Factories;
+using Orders.Infrastructure.Persistence.Mappings;
 using Orders.Infrastructure.Persistence.Repositories;
 using Orders.Infrastructure.Services;
 
@@ -16,12 +17,34 @@ namespace Orders.Infrastructure
         {
             services.AddRepositories();
             services.AddServices();
-            services.AddReadDbContext(configuration);
+            services.AddMongo(configuration);
         }
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
         }
+
+        public static void AddMongo(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<ReadDbContext>();
+
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var connectionString = configuration.GetConnectionString("ReadDbContext");
+                return new MongoClient(connectionString);
+            });
+
+            services.AddScoped(sp =>
+            {
+                var client = sp.GetRequiredService<IMongoClient>();
+                return client.GetDatabase("EA-Order");
+            });
+
+            MongoDbMappings.MapEntity();
+            MongoDbMappings.MapVoucher();
+            MongoDbMappings.MapOrder();
+        }
+
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddSingleton(sp =>
@@ -36,9 +59,5 @@ namespace Orders.Infrastructure
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IVoucherRepository, VoucherRepository>();
         }
-
-        public static void AddReadDbContext(this IServiceCollection services, IConfiguration configuration) =>
-            services.AddDbContext<ReadDbContext>(opt =>
-            opt.UseMongoDB(configuration.GetConnectionString("ReadDbContext") ?? string.Empty, "EA-Orders"));
     }
 }
