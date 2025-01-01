@@ -6,7 +6,7 @@ namespace Orders.Core.Repositories
     {
         Task<bool> CreateAsync(Order order);
         Task<Order?> GetByCodeAsync(string code);
-        Task<List<Order>?> GetAllAsync(int pageNumber, int pageSize);
+        Task<List<Order>?> GetAllAsync(int pageNumber, int pageSize, Guid customerId);
         Task CreateToProjectionAsync(Order order);
     }
 }

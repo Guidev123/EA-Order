@@ -2,6 +2,7 @@
 using Orders.Application.Mappers;
 using Orders.Application.Queries.Factories;
 using Orders.Application.Responses;
+using Orders.Application.Responses.Messages;
 using Orders.Core.Repositories;
 
 namespace Orders.Application.Queries.Orders.GetAll
@@ -12,9 +13,9 @@ namespace Orders.Application.Queries.Orders.GetAll
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<PagedResponse<List<GetAllOrdersResponse>>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
-            var orders = await _unitOfWork.Orders.GetAllAsync(request.PageNumber, request.PageSize);
+            var orders = await _unitOfWork.Orders.GetAllAsync(request.PageNumber, request.PageSize, request.CustomerId);
             if (orders is null)
-                return new(null, 404, "Orders not found");
+                return new(null, 404, ResponseMessages.NO_ORDERS_FOUND.GetDescription());
 
             var orderResponses = OrderQueryFactory.CreateGetAllOrdersQuery(orders);
 

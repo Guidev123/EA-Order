@@ -4,6 +4,7 @@ using Orders.Application.Events.Factories;
 using Orders.Application.Events.Vouchers;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
+using Orders.Application.Responses.Messages;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
@@ -24,28 +25,28 @@ namespace Orders.Application.Commands.Orders.Create
             var validation = ValidateEntity(new OrderValidator(), order);
 
             if (!validation.IsValid)
-                return new(null, 400, "Error", GetAllErrors(validation));
+                return new(null, 400, ResponseMessages.INVALID_OPERATION.GetDescription(), GetAllErrors(validation));
 
             var voucher = await ApplyVoucherAsync(request, order, validation);
             if (!voucher.IsSuccess)
-                return new(null, 400, "Error", GetAllErrors(validation));
+                return new(null, 400, ResponseMessages.INVALID_OPERATION.GetDescription(), GetAllErrors(validation));
 
             if (!ValidateOrder(order))
             {
-                AddError(validation, "Order price is not correct");
-                return new(null, 400, "Error", GetAllErrors(validation));
+                AddError(validation, ResponseMessages.INCORRECT_PRICE.GetDescription());
+                return new(null, 400, ResponseMessages.INVALID_OPERATION.GetDescription(), GetAllErrors(validation));
             }
 
             order.AuthorizeOrder();
 
             var result = await _unitOfWork.Orders.CreateAsync(order);
-            if (!result) return new(null, 400, "Something has failed to persist data");
+            if (!result) return new(null, 400, ResponseMessages.PERSISTENCE_FAILED.GetDescription());
 
             order.AddEvent(OrderEventFactory.CreateOrderCreatedProjectionEvent(order));
 
             await _unitOfWork.PublishDomainEventsAsync(order);
 
-            return new(new(order.Code), 201);
+            return new(new(order.Code), 201, ResponseMessages.SUCCESS_OPERATION.GetDescription());
         }
 
         #region Validators Methods
@@ -56,13 +57,13 @@ namespace Orders.Application.Commands.Orders.Create
             var voucher = await _unitOfWork.Vouchers.GetByCodeAsync(command.VoucherCode);
             if (voucher is null)
             {
-                AddError(validationResult, "Voucher not found");
+                AddError(validationResult, ResponseMessages.VOUCHER_NOT_FOUND.GetDescription());
                 return new(null, 400);
             }
 
             if(!voucher.IsValid())
             {
-                AddError(validationResult, "Voucher is not valid to use");
+                AddError(validationResult, ResponseMessages.VOUCHER_NOT_VALID.GetDescription());
                 return new(null, 400);
             }
 

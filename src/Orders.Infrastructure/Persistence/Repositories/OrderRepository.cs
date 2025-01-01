@@ -72,8 +72,8 @@ namespace Orders.Infrastructure.Persistence.Repositories
         public async Task CreateToProjectionAsync(Order order)
             => await _orderCollection.InsertOneAsync(order);
 
-        public async Task<List<Order>?> GetAllAsync(int pageNumber, int pageSize)
-            => await _orderCollection.Find(_ => true).Skip((pageNumber - 1) * pageSize).Limit(pageSize).ToListAsync();
+        public async Task<List<Order>?> GetAllAsync(int pageNumber, int pageSize, Guid customerId)
+            => await _orderCollection.Find(x => x.CustomerId == customerId).Skip((pageNumber - 1) * pageSize).Limit(pageSize).ToListAsync();
 
         public async Task<Order?> GetByCodeAsync(string code)
             => await _orderCollection.Find(c => c.Code == code).SingleOrDefaultAsync();

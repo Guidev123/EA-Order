@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Orders.Application.Events;
 using Orders.Application.Events.Factories;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
+using Orders.Application.Responses.Messages;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
 
@@ -18,14 +18,15 @@ namespace Orders.Application.Commands.Vouchers.Create
             var voucher = request.MapToEntity();
             var validation = ValidateEntity(new VoucherValidator(), voucher);
 
-            if(!validation.IsValid) return new(null, 400, "Error", GetAllErrors(validation));
+            if(!validation.IsValid)
+                return new(null, 400, ResponseMessages.INVALID_OPERATION.GetDescription(), GetAllErrors(validation));
 
             voucher.AddEvent(VoucherEventFactory.CreateVoucherCreatedProjectionEvent(voucher));
 
             await _unitOfWork.Vouchers.CreateAsync(voucher);
             await _unitOfWork.PublishDomainEventsAsync(voucher);
 
-            return new(new(voucher.Id), 201);
+            return new(new(voucher.Code), 201, ResponseMessages.SUCCESS_OPERATION.GetDescription());
         }
     }
 }

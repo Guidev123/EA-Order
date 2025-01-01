@@ -16,7 +16,7 @@ namespace Orders.API.Endpoints.Vouchers
         {
             var result = await mediator.Send(command);
             return result.IsSuccess
-                ? TypedResults.Created($"/{command.Code}", result.Data)
+                ? TypedResults.Created($"/{command.Code}", result)
                 : TypedResults.BadRequest(result);
         }
     }

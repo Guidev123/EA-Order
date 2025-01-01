@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
+using Orders.Application.Responses.Messages;
 using Orders.Core.Repositories;
 
 namespace Orders.Application.Queries.Orders.GetByCode
@@ -13,7 +14,7 @@ namespace Orders.Application.Queries.Orders.GetByCode
         {
             var order = await _unitOfWork.Orders.GetByCodeAsync(request.Code);
             if(order is null)
-                return new(null, 404, "Order not found");
+                return new(null, 404, ResponseMessages.ORDER_NOT_FOUND.GetDescription());
 
             var orderItems = order.OrderItems.MapOrderItemFromEntity();
 
