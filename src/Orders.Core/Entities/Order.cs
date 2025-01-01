@@ -84,6 +84,7 @@ namespace Orders.Core.Entities
         public void PayOrder() => OrderStatus = EOrderStatus.Paid;
         public void DeliveryOrder() => OrderStatus = EOrderStatus.Delivered;
 
+        // CTOR mapping
         public Order(Guid id, string code, Guid customerId,
                      decimal totalPrice, List<OrderItem> orderItems, bool voucherIsUsed,
                      decimal? discount, Address address,

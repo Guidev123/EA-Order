@@ -12,15 +12,19 @@ namespace Orders.Application.Mappers
 
         public static List<OrderDTO> MapToEntity(this List<Order> orders) =>
                 orders.Select(order => new OrderDTO(order.Id, order.Code, order.CustomerId,
-                order.TotalPrice, order.OrderItems, order.VoucherIsUsed, order.Discount,
+                order.TotalPrice, order.OrderItems.MapOrderItemFromEntity(), order.VoucherIsUsed, order.Discount,
                 order.Address!, order.CreatedAt, order.OrderStatus, order.VoucherId)).ToList();
 
         public static List<OrderItem> MapOrderItemToEntity(this List<OrderItemDTO> dto, Guid orderId) =>
             dto.Select(item => new OrderItem(orderId, item.ProductId, item.Name,
                        item.Quantity, item.Price, item.Image)).ToList();
 
+        public static List<OrderItem> MapOrderItemEntityToProjection(this List<OrderItemDTO> dto, Guid orderId) =>
+            dto.Select(item => new OrderItem(item.Id, orderId, item.ProductId, item.Name,
+                   item.Quantity, item.Price, item.Image)).ToList();
+
         public static List<OrderItemDTO> MapOrderItemFromEntity(this List<OrderItem> dto) =>
-            dto.Select(item => new OrderItemDTO(item.ProductId, item.ProductName,
+            dto.Select(item => new OrderItemDTO(item.Id, item.ProductId, item.ProductName,
                        item.UnitValue, item.ProductImage, item.Quantity)).ToList();
 
         public static Address MapToAddress(this AddressDTO dto) =>
@@ -28,7 +32,7 @@ namespace Orders.Application.Mappers
 
         public static Order MapToEntity(this OrderDTO command) =>
             new(command.Id, command.Code, command.CustomerId, command.TotalPrice,
-                command.OrderItems, command.VoucherIsUsed, command.Discount, command.Address,
+                command.OrderItems.MapOrderItemEntityToProjection(command.Id), command.VoucherIsUsed, command.Discount, command.Address,
                 command.CreatedAt, command.OrderStatus, command.VoucherId);
     }
 }

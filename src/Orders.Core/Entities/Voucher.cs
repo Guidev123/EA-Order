@@ -39,6 +39,7 @@ namespace Orders.Core.Entities
 
         public void SetExpirationDate(DateTime expirationDate) => ExpiresAt = expirationDate;
 
+        // CTOR mapping
         public Voucher(Guid id, string code, decimal? percentual,
                        decimal? discountValue, int? quantity,
                        EDiscountType? discountType, DateTime expiresAt, DateTime createdAt)
