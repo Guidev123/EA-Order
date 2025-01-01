@@ -11,5 +11,9 @@ namespace Orders.Application.Mappers
         public static Voucher MapToEntity(this VoucherDTO command) =>
             new(command.Id, command.Code, command.Percentual, command.DiscountValue,
                 command.Quantity, command.DiscountType, command.ExpiresAt, command.CreatedAt);
+
+        public static VoucherDTO MapFromEntity(this Voucher command) =>
+            new(command.Id, command.Code, command.Percentual, command.DiscountValue,
+                command.Quantity, command.DiscountType, command.ExpiresAt, command.CreatedAt, command.IsActive);
     }
 }

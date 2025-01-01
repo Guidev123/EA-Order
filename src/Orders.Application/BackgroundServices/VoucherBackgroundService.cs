@@ -13,15 +13,25 @@ namespace Orders.Application.BackgroundServices
         private readonly IMessageBus _bus = bus;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-        private void SetSubscribers() =>
-            _bus.SubscribeAsync<VoucherCreatedProjectionEvent>("VoucherCreatedProjectionEvent", VoucherProjectionAsync);
+        private void SetSubscribers()
+        {
+            _bus.SubscribeAsync<VoucherCreatedProjectionEvent>("VoucherCreatedProjectionEvent", CreatedVoucherProjectionAsync);
+            _bus.SubscribeAsync<VoucherUpdatedProjectionEvent>("VoucherUpdatedProjectionEvent", UpdatedVoucherProjectionAsync);
+        }
 
-        private async Task VoucherProjectionAsync(VoucherCreatedProjectionEvent projectionEvent)
+        private async Task CreatedVoucherProjectionAsync(VoucherCreatedProjectionEvent projectionEvent)
         {
             using var scope = _serviceProvider.CreateScope();
             var respository = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
             await respository.Vouchers.CreateToProjectionAsync(projectionEvent.Voucher.MapToEntity());
+        }
+
+        private async Task UpdatedVoucherProjectionAsync(VoucherUpdatedProjectionEvent projectionEvent)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var respository = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            await respository.Vouchers.UpdateToProjectionAsync(projectionEvent.Voucher.MapToEntity());
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

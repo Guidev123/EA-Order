@@ -71,5 +71,9 @@ namespace Orders.Infrastructure.Persistence.Repositories
 
         public async Task<Voucher?> GetByCodeAsync(string code)
             => await _voucherCollection.Find(c => c.Code == code).SingleOrDefaultAsync();
+
+
+        public async Task UpdateToProjectionAsync(Voucher voucher) =>
+            await _voucherCollection.ReplaceOneAsync(c => c.Id == voucher.Id, voucher);
     }
 }

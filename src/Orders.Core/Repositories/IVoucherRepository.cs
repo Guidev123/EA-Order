@@ -8,5 +8,6 @@ namespace Orders.Core.Repositories
         Task UpdateAsync(Voucher voucher);
         Task CreateAsync(Voucher voucher);
         Task CreateToProjectionAsync(Voucher voucher);  
+        Task UpdateToProjectionAsync(Voucher voucher);
     }
 }
