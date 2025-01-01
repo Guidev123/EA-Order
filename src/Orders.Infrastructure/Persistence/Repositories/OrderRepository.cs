@@ -50,7 +50,6 @@ namespace Orders.Infrastructure.Persistence.Repositories
 
                 await connection.ExecuteAsync(sqlOrder, orderParams, transaction);
 
-
                 const string sqlItems = @"INSERT INTO OrderItems
                                     (Id, OrderId, ProductId, ProductName, Quantity, UnitValue, ProductImage)
                                 VALUES

@@ -9,6 +9,7 @@ namespace Orders.Application.Mappers
         public static Voucher MapToEntity(this CreateVoucherCommand command) =>
             new(command.Code, command.Percentual, command.DiscountValue, command.Quantity, command.DiscountType, command.ExpiresAt);
         public static Voucher MapToEntity(this VoucherDTO command) =>
-            new(command.Code, command.Percentual, command.DiscountValue, command.Quantity, command.DiscountType, command.ExpiresAt);
+            new(command.Id, command.Code, command.Percentual, command.DiscountValue,
+                command.Quantity, command.DiscountType, command.ExpiresAt, command.CreatedAt);
     }
 }

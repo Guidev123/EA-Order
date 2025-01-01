@@ -6,11 +6,10 @@ namespace Orders.Application.Commands.Orders.Create
 {
     public class CreateOrderCommand : IRequest<Response<CreateOrderResponse>>
     {
-        public CreateOrderCommand(Guid customerId, decimal totalPrice,
+        public CreateOrderCommand(decimal totalPrice,
                           List<OrderItemDTO> orderItems, string voucherCode,
                           bool voucherIsUsed, decimal discount, AddressDTO address)
         {
-            CustomerId = customerId;
             TotalPrice = totalPrice;
             OrderItems = orderItems;
             VoucherCode = voucherCode;
@@ -26,7 +25,6 @@ namespace Orders.Application.Commands.Orders.Create
         public bool VoucherIsUsed { get; private set; }
         public decimal Discount { get; private set; }
         public AddressDTO Address { get; private set; }
-
         public void SetCustomerId(Guid customerId) => CustomerId = customerId;
     }
 }

@@ -34,6 +34,24 @@ namespace Orders.Core.Entities
             if (Quantity >= 1) return;
         }
 
+        public bool IsValid()
+            => IsActive && Quantity > 0 && ExpiresAt >= DateTime.Now;
+
         public void SetExpirationDate(DateTime expirationDate) => ExpiresAt = expirationDate;
+
+        public Voucher(Guid id, string code, decimal? percentual,
+                       decimal? discountValue, int? quantity,
+                       EDiscountType? discountType, DateTime expiresAt, DateTime createdAt)
+        {
+            Id = id;
+            Code = code;
+            Percentual = percentual;
+            DiscountValue = discountValue;
+            Quantity = quantity;
+            ExpiresAt = expiresAt;
+            DiscountType = discountType ?? EDiscountType.Value;
+            IsActive = true;
+            CreatedAt = createdAt;
+        }
     }
 }

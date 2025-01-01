@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Orders.Application.Events.Orders;
+using Orders.Application.Mappers;
 using Orders.Core.Repositories;
 using SharedLib.MessageBus;
 
@@ -19,7 +20,7 @@ namespace Orders.Application.BackgroundServices
             using var scope = _serviceProvider.CreateScope();
             var respository = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-            await respository.Orders.CreateToProjectionAsync(projectionEvent.Order);
+            await respository.Orders.CreateToProjectionAsync(projectionEvent.Order.MapToEntity());
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

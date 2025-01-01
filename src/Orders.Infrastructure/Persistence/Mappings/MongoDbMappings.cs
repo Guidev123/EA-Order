@@ -3,7 +3,6 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Orders.Core.DomainObjects;
 using Orders.Core.Entities;
-using System.Text.RegularExpressions;
 
 namespace Orders.Infrastructure.Persistence.Mappings
 {
@@ -50,15 +49,18 @@ namespace Orders.Infrastructure.Persistence.Mappings
                 {
                     map.AutoMap();
                     map.MapMember(o => o.Code).SetElementName("code");
-                    map.MapMember(o => o.CustomerId).SetElementName("customer_id");
-                    map.MapMember(o => o.VoucherId).SetElementName("voucher_id");
+                    map.MapMember(o => o.CustomerId).SetElementName("customer_id")
+                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+                    map.MapMember(o => o.VoucherId).SetElementName("voucher_id")
+                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard)).SetIgnoreIfNull(true);
+
                     map.MapMember(o => o.VoucherIsUsed).SetElementName("voucher_is_used");
                     map.MapMember(o => o.Discount).SetElementName("discount");
                     map.MapMember(o => o.TotalPrice).SetElementName("total_price");
                     map.MapMember(o => o.CreatedAt).SetElementName("created_at");
                     map.MapMember(o => o.OrderStatus).SetElementName("order_status");
                     map.MapMember(o => o.Address).SetElementName("address");
-                    map.MapMember(o => o.Voucher).SetElementName("voucher");
                     map.MapMember(o => o.OrderItems)
                         .SetElementName("order_items");
 
@@ -71,8 +73,12 @@ namespace Orders.Infrastructure.Persistence.Mappings
                 BsonClassMap.RegisterClassMap<OrderItem>(map =>
                 {
                     map.AutoMap();
-                    map.MapProperty(i => i.OrderId).SetElementName("order_id");
-                    map.MapProperty(i => i.ProductId).SetElementName("product_id");
+                    map.MapProperty(i => i.OrderId).SetElementName("order_id")
+                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+                    map.MapProperty(i => i.ProductId).SetElementName("product_id")
+                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
                     map.MapProperty(i => i.ProductName).SetElementName("product_name");
                     map.MapProperty(i => i.Quantity).SetElementName("quantity");
                     map.MapProperty(i => i.UnitValue).SetElementName("unit_value");

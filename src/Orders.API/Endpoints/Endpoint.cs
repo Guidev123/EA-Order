@@ -11,6 +11,7 @@ namespace Orders.API.Endpoints
 
             endpoints.MapGroup("api/v1/orders")
                 .WithTags("Orders")
+                .RequireAuthorization()
                 .MapEndpoint<CreateOrderEndpoint>();
 
             endpoints.MapGroup("api/v1/vouchers")

@@ -7,14 +7,13 @@ namespace Orders.Core.Entities
 {
     public class Order : Entity, IAggregateRoot
     {
+        public Order() { }
         public Order(Guid customerId, decimal totalPrice,
-                     List<OrderItem> orderItems,
                      bool voucherIsUsed = false, decimal discount = 0)
         {
             Code = Guid.NewGuid().ToString()[..8];
             CustomerId = customerId;
             TotalPrice = totalPrice;
-            OrderItems = orderItems;
             Discount = discount;
             VoucherIsUsed = voucherIsUsed;
             CreatedAt = DateTime.Now;
@@ -24,7 +23,7 @@ namespace Orders.Core.Entities
 
         public string Code { get; private set; } = string.Empty;
         public Guid CustomerId { get; private set; }
-        public Guid? VoucherId { get; private set; }
+        public Guid VoucherId { get; private set; }
         public bool VoucherIsUsed { get; private set; }
         public decimal Discount { get; private set; }
         public decimal TotalPrice { get; private set; }
@@ -32,7 +31,7 @@ namespace Orders.Core.Entities
         public EOrderStatus OrderStatus { get; private set; }
         public Address? Address { get; private set; }
         public Voucher? Voucher { get; private set; }
-        public List<OrderItem> OrderItems { get; private set; }
+        public List<OrderItem> OrderItems { get; private set; } = [];
 
         public void ApplyVoucher(Voucher voucher)
         {
@@ -40,6 +39,9 @@ namespace Orders.Core.Entities
             Voucher = voucher;
             VoucherId = voucher.Id;
         }
+
+        public void AddItems(List<OrderItem> orderItems) =>
+            OrderItems.AddRange(orderItems);
 
         public void ApplyAddress(Address address) => Address = address;
 
@@ -81,5 +83,23 @@ namespace Orders.Core.Entities
         public void CancelOrder() => OrderStatus = EOrderStatus.Canceled;
         public void PayOrder() => OrderStatus = EOrderStatus.Paid;
         public void DeliveryOrder() => OrderStatus = EOrderStatus.Delivered;
+
+        public Order(Guid id, string code, Guid customerId,
+                     decimal totalPrice, List<OrderItem> orderItems, bool voucherIsUsed,
+                     decimal? discount, Address address,
+                     DateTime createdAt, EOrderStatus orderStatus, Guid voucherId)
+        {
+            Id = id;
+            Code = code;
+            CustomerId = customerId;
+            TotalPrice = totalPrice;
+            OrderItems = orderItems;
+            VoucherIsUsed = voucherIsUsed;
+            Discount = discount ?? 0;
+            Address = address;
+            CreatedAt = createdAt;
+            OrderStatus = orderStatus;
+            VoucherId = voucherId;
+        }
     }
 }

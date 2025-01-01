@@ -6,7 +6,7 @@ namespace Orders.Core.DomainObjects
     {
         protected Entity() => Id = Guid.NewGuid();
 
-        public Guid Id { get; }
+        public Guid Id { get; protected set; }
 
         private List<IDomainEvent> _events = [];
         public IReadOnlyCollection<IDomainEvent> Events => _events.AsReadOnly();

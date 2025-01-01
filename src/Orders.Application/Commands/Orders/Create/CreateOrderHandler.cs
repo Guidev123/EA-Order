@@ -1,11 +1,9 @@
 ﻿using FluentValidation.Results;
 using MediatR;
-using Orders.Application.Events;
-using Orders.Application.Events.Orders;
+using Orders.Application.Events.Factories;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
 using Orders.Core.Entities;
-using Orders.Core.Events;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
 
@@ -19,6 +17,7 @@ namespace Orders.Application.Commands.Orders.Create
         {
             var order = request.MapToEntity();
             order.ApplyAddress(request.Address.MapToAddress());
+            order.AddItems(request.OrderItems.MapOrderItemToEntity(order.Id));
 
             var validation = ValidateEntity(new OrderValidator(), order);
 
@@ -39,7 +38,7 @@ namespace Orders.Application.Commands.Orders.Create
             var result = await _unitOfWork.Orders.CreateAsync(order);
             if (!result) return new(null, 400, "Something has failed to persist data");
 
-            order.AddEvent(new OrderCreatedProjectionEvent(order));
+            order.AddEvent(OrderEventFactory.CreateOrderCreatedProjectionEvent(order));
             await _unitOfWork.PublishDomainEventsAsync(order);
 
             return new(new(order.Code), 201);
@@ -50,10 +49,17 @@ namespace Orders.Application.Commands.Orders.Create
         {
             if (!command.VoucherIsUsed) return true;
 
+
             var voucher = await _unitOfWork.Vouchers.GetByCodeAsync(command.VoucherCode);
             if (voucher is null)
             {
                 AddError(validationResult, "Voucher not found");
+                return false;
+            }
+
+            if(voucher.IsValid())
+            {
+                AddError(validationResult, "Voucher is not valid to use");
                 return false;
             }
 

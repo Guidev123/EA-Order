@@ -1,11 +1,11 @@
-﻿using Orders.Core.Entities;
+﻿using Orders.Application.DTOs;
 using Orders.Core.Events;
 
 namespace Orders.Application.Events.Orders
 {
-    public class OrderCreatedProjectionEvent(Order order) : IDomainEvent
+    public class OrderCreatedProjectionEvent(OrderDTO order) : IDomainEvent
     {
-        public Order Order { get; private set; } = order;
+        public OrderDTO Order { get; private set; } = order;
         public Guid EventId => Guid.NewGuid();
         public DateTime OccurredAt => DateTime.Now;
     }
