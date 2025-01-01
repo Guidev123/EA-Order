@@ -10,6 +10,11 @@ namespace Orders.Application.Mappers
         public static Order MapToEntity(this CreateOrderCommand command) =>
             new(command.CustomerId, command.TotalPrice, command.VoucherIsUsed, command.Discount);
 
+        public static List<OrderDTO> MapToEntity(this List<Order> orders) =>
+                orders.Select(order => new OrderDTO(order.Id, order.Code, order.CustomerId,
+                order.TotalPrice, order.OrderItems, order.VoucherIsUsed, order.Discount,
+                order.Address!, order.CreatedAt, order.OrderStatus, order.VoucherId)).ToList();
+
         public static List<OrderItem> MapOrderItemToEntity(this List<OrderItemDTO> dto, Guid orderId) =>
             dto.Select(item => new OrderItem(orderId, item.ProductId, item.Name,
                        item.Quantity, item.Price, item.Image)).ToList();
