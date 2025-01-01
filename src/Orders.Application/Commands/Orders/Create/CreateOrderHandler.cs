@@ -43,9 +43,7 @@ namespace Orders.Application.Commands.Orders.Create
 
             order.AddEvent(OrderEventFactory.CreateOrderCreatedProjectionEvent(order));
 
-            await _unitOfWork.Vouchers.UpdateAsync(voucher.Data!);
             await _unitOfWork.PublishDomainEventsAsync(order);
-            await _unitOfWork.PublishDomainEventsAsync(voucher.Data!);
 
             return new(new(order.Code), 201);
         }
@@ -79,6 +77,9 @@ namespace Orders.Application.Commands.Orders.Create
             voucher.DebitQuantity();
 
             voucher.AddEvent(new VoucherUpdatedProjectionEvent(voucher.MapFromEntity()));
+
+            await _unitOfWork.Vouchers.UpdateAsync(voucher);
+            await _unitOfWork.PublishDomainEventsAsync(voucher);
 
             return new(voucher, 200);
         }

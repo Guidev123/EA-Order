@@ -23,7 +23,7 @@ namespace Orders.Core.Entities
 
         public string Code { get; private set; } = string.Empty;
         public Guid CustomerId { get; private set; }
-        public Guid VoucherId { get; private set; }
+        public Guid? VoucherId { get; private set; }
         public bool VoucherIsUsed { get; private set; }
         public decimal Discount { get; private set; }
         public decimal TotalPrice { get; private set; }
@@ -87,7 +87,7 @@ namespace Orders.Core.Entities
         public Order(Guid id, string code, Guid customerId,
                      decimal totalPrice, List<OrderItem> orderItems, bool voucherIsUsed,
                      decimal? discount, Address address,
-                     DateTime createdAt, EOrderStatus orderStatus, Guid voucherId)
+                     DateTime createdAt, EOrderStatus orderStatus, Guid? voucherId)
         {
             Id = id;
             Code = code;

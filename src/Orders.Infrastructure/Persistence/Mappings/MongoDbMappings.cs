@@ -52,14 +52,17 @@ namespace Orders.Infrastructure.Persistence.Mappings
                     map.MapMember(o => o.CustomerId).SetElementName("customer_id")
                     .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-                    map.MapMember(o => o.VoucherId).SetElementName("voucher_id")
-                    .SetSerializer(new GuidSerializer(GuidRepresentation.Standard)).SetIgnoreIfNull(true);
+                    map.MapMember(o => o.VoucherId)
+                   .SetElementName("voucher_id")
+                   .SetSerializer(new NullableSerializer<Guid>(new GuidSerializer(GuidRepresentation.Standard)))
+                   .SetIgnoreIfNull(true);
 
                     map.MapMember(o => o.VoucherIsUsed).SetElementName("voucher_is_used");
                     map.MapMember(o => o.Discount).SetElementName("discount");
                     map.MapMember(o => o.TotalPrice).SetElementName("total_price");
                     map.MapMember(o => o.CreatedAt).SetElementName("created_at");
                     map.MapMember(o => o.OrderStatus).SetElementName("order_status");
+                    map.MapMember(o => o.Voucher).SetElementName("voucher").SetIgnoreIfNull(true);
                     map.MapMember(o => o.Address).SetElementName("address");
                     map.MapMember(o => o.OrderItems)
                         .SetElementName("order_items");
