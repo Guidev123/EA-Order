@@ -6,7 +6,7 @@ namespace Orders.Core.Entities
     {
         public OrderItem(Guid orderId, Guid productId,
                          string productName, int quantity,
-                         decimal unitValue, string? productImage = null)
+                         decimal unitValue, string productImage)
         {
             OrderId = orderId;
             ProductId = productId;
@@ -21,7 +21,7 @@ namespace Orders.Core.Entities
         public string ProductName { get; private set; }
         public int Quantity { get; private set; }
         public decimal UnitValue { get; private set; }
-        public string? ProductImage { get; private set; }
+        public string ProductImage { get; private set; }
         internal decimal GetPrice() => Quantity * UnitValue;
     }
 }

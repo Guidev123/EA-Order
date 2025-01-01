@@ -1,7 +1,7 @@
 ﻿
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Orders.Application.Queries.Vouchers.GetVoucherByCode;
+using Orders.Application.Queries.Vouchers.GetByCode;
 using Orders.Application.Responses;
 
 namespace Orders.API.Endpoints.Vouchers

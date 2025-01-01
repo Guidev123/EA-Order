@@ -3,7 +3,7 @@ using Orders.Application.Commands;
 using Orders.Application.Responses;
 using Orders.Core.Repositories;
 
-namespace Orders.Application.Queries.Vouchers.GetVoucherByCode
+namespace Orders.Application.Queries.Vouchers.GetByCode
 {
     public sealed class GetVoucherByCodeHandler(IUnitOfWork unitOfWork)
                       : CommandHandler, IRequestHandler<GetVoucherByCodeQuery, Response<GetVoucherByCodeResponse>>
@@ -13,7 +13,7 @@ namespace Orders.Application.Queries.Vouchers.GetVoucherByCode
         {
             var voucher = await _unitOfWork.Vouchers.GetByCodeAsync(request.Code);
             if (voucher is null) return new(null, 404, "Vocher not found");
-            
+
             return new(new(voucher.Percentual, voucher.DiscountValue, voucher.Code, voucher.DiscountType), 200);
         }
     }
