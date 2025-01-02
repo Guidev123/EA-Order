@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Orders.Application.Commands.Orders.Create;
 using Orders.Application.Responses;
 using Orders.Application.Services;
@@ -11,8 +10,8 @@ namespace Orders.API.Endpoints.Orders
         public static void Map(IEndpointRouteBuilder app) =>
             app.MapPost("/", HandleAsync).Produces<Response<CreateOrderResponse>>();
 
-        private static async Task<IResult> HandleAsync([FromServices] IMediator mediator,
-                                                       [FromServices] IUserService user,
+        private static async Task<IResult> HandleAsync(IMediator mediator,
+                                                       IUserService user,
                                                        CreateOrderCommand command)
         {
             var userId = await user.GetUserIdAsync() ?? Guid.Empty;

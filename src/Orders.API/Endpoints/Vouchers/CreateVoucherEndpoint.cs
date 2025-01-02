@@ -1,6 +1,5 @@
 ﻿
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Orders.Application.Commands.Vouchers.Create;
 using Orders.Application.Responses;
 
@@ -11,7 +10,7 @@ namespace Orders.API.Endpoints.Vouchers
         public static void Map(IEndpointRouteBuilder app) => 
             app.MapPost("/", HandleAsync).Produces<Response<CreateVoucherResponse>>();
 
-        private static async Task<IResult> HandleAsync([FromServices]IMediator mediator,
+        private static async Task<IResult> HandleAsync(IMediator mediator,
                                                        CreateVoucherCommand command)
         {
             var result = await mediator.Send(command);
