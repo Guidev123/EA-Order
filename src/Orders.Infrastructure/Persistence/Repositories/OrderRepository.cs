@@ -77,5 +77,30 @@ namespace Orders.Infrastructure.Persistence.Repositories
 
         public async Task<Order?> GetByCodeAsync(string code)
             => await _orderCollection.Find(c => c.Code == code).SingleOrDefaultAsync();
+
+        public async Task UpdateToProjectionAsync(Order order) =>
+            await _orderCollection.ReplaceOneAsync(o => o.Id == order.Id, order);
+
+        public async Task UpdateAsync(Order order)
+        {
+            using var connection = _connectionFactory.Create();
+            await connection.OpenAsync();
+
+            const string sql = @"UPDATE Orders
+                         SET VoucherIsUsed = @VoucherIsUsed,
+                             Discount = @Discount, 
+                             TotalPrice = @TotalPrice, 
+                             OrderStatus = @OrderStatus
+                         WHERE Id = @Id";
+
+            await connection.ExecuteAsync(sql, new
+            {
+                order.VoucherIsUsed,
+                order.Discount,
+                order.TotalPrice,
+                order.OrderStatus,
+                order.Id
+            });
+        }
     }
 }

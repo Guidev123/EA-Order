@@ -2,11 +2,11 @@
 {
     public enum EOrderStatus
     {
-        WaitingPyment = 0,
-        Authorized = 1,
-        Paid = 2,
+        Delivered = 0,
+        Paid = 1,
+        Authorized = 2,
         Failed = 3,
-        Delivered = 4,
+        WaitingPyment = 4,
         Canceled = 5
     }
 }
