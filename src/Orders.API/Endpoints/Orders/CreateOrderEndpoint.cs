@@ -20,7 +20,7 @@ namespace Orders.API.Endpoints.Orders
             var result = await mediator.Send(command);
             return result.IsSuccess && result.Data is not null
                 ? TypedResults.Created($"/{result.Data.OrderCode}", result)
-                : result.StatusCode is 404 ? TypedResults.NotFound(result)
+                : result.Code is 404 ? TypedResults.NotFound(result)
                 : TypedResults.BadRequest(result);
         }
     }
