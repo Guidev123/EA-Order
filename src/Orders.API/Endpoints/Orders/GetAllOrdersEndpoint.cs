@@ -18,6 +18,7 @@ namespace Orders.API.Endpoints.Orders
         {
             var userId = await user.GetUserIdAsync() ?? Guid.Empty;
             var result = await mediator.Send(new GetAllOrdersQuery(pageNumber, pageSize, userId));
+
             return result.IsSuccess
                 ?  Results.Ok(result) 
                 : Results.NotFound(result);

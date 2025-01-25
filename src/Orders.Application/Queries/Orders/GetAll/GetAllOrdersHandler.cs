@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Orders.Application.Mappers;
 using Orders.Application.Queries.Factories;
 using Orders.Application.Responses;
 using Orders.Application.Responses.Messages;

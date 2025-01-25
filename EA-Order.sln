@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.UnitTests", "tests\O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.IntegrationEvents", "..\EA-IntegrationEvents\EA.IntegrationEvents\EA.IntegrationEvents.csproj", "{3D27B60B-B4F3-4E96-9CA1-429D01A96408}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLib.Tokens", "..\SharedLib\src\SharedLib.Tokens\SharedLib.Tokens.csproj", "{3C379049-3E96-4871-8338-47958F650B8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{3D27B60B-B4F3-4E96-9CA1-429D01A96408}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D27B60B-B4F3-4E96-9CA1-429D01A96408}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D27B60B-B4F3-4E96-9CA1-429D01A96408}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C379049-3E96-4871-8338-47958F650B8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C379049-3E96-4871-8338-47958F650B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C379049-3E96-4871-8338-47958F650B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C379049-3E96-4871-8338-47958F650B8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +80,6 @@ Global
 		{66A4532A-160C-40D1-9F79-7F045637B56F} = {68AA5C3A-E820-4A52-AB70-496604147C3E}
 		{956EAF29-C8C7-4CDF-820E-7A71CCB26979} = {66A4532A-160C-40D1-9F79-7F045637B56F}
 		{3D27B60B-B4F3-4E96-9CA1-429D01A96408} = {B6C0CCD9-2FFE-4494-A60A-E762E7130763}
+		{3C379049-3E96-4871-8338-47958F650B8E} = {B6C0CCD9-2FFE-4494-A60A-E762E7130763}
 	EndGlobalSection
 EndGlobal

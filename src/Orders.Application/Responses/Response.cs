@@ -3,18 +3,18 @@
 namespace Orders.Application.Responses
 {
     public class Response<TData>(
-    TData? data,
-    int code = Response<TData>.DEFAULT_STATUS_CODE,
-    string? message = null,
-    string[]? errors = null)
+        TData? data,
+        int? code = null,
+        string? message = null,
+        string[]? errors = null)
     {
-        public const int DEFAULT_STATUS_CODE = 200;
-
-        public int Code { get; } = code;
+        [JsonIgnore]
+        public readonly int statusCode = code ?? DEFAULT_STATUS_CODE;
+        private const int DEFAULT_STATUS_CODE = 200;
         public TData? Data { get; set; } = data;
         public string? Message { get; } = message;
         public string[]? Errors { get; } = errors;
-        public bool IsSuccess
-            => Code is >= DEFAULT_STATUS_CODE and <= 299;
+        public bool IsSuccess =>
+            statusCode is >= DEFAULT_STATUS_CODE and <= 299;
     }
 }
