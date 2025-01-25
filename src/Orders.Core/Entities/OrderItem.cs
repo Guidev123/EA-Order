@@ -5,24 +5,24 @@ namespace Orders.Core.Entities
     public class OrderItem : Entity
     {
         public OrderItem(Guid orderId, Guid productId,
-                         string productName, int quantity,
-                         decimal unitValue, string productImage)
+                         string name, int quantity,
+                         decimal price, string productImage)
         {
             OrderId = orderId;
             ProductId = productId;
-            ProductName = productName;
+            Name = name;
             Quantity = quantity;
-            UnitValue = unitValue;
-            ProductImage = productImage;
+            Price = price;
+            ImageUrl = productImage;
         }
 
         public Guid OrderId { get; private set; }
         public Guid ProductId { get; private set; }
-        public string ProductName { get; private set; }
+        public string Name { get; private set; }
         public int Quantity { get; private set; }
-        public decimal UnitValue { get; private set; }
-        public string ProductImage { get; private set; }
-        internal decimal GetPrice() => Quantity * UnitValue;
+        public decimal Price { get; private set; }
+        public string ImageUrl { get; private set; }
+        internal decimal GetPrice() => Quantity * Price;
 
         // CTOR mapping
         public OrderItem(Guid id, Guid orderId, Guid productId,
@@ -32,10 +32,10 @@ namespace Orders.Core.Entities
             Id = id;
             OrderId = orderId;
             ProductId = productId;
-            ProductName = productName;
+            Name = productName;
             Quantity = quantity;
-            UnitValue = unitValue;
-            ProductImage = productImage;
+            Price = unitValue;
+            ImageUrl = productImage;
         }
     }
 }

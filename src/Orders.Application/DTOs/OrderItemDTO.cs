@@ -4,13 +4,13 @@ namespace Orders.Application.DTOs
 {
     public class OrderItemDTO
     {
-        public OrderItemDTO(Guid id, Guid productId, string name, decimal price, string image, int quantity)
+        public OrderItemDTO(Guid id, Guid productId, string name, decimal price, string imageUrl, int quantity)
         {
             Id = id;
             ProductId = productId;
             Name = name;
             Price = price;
-            Image = image;
+            ImageUrl = imageUrl;
             Quantity = quantity;
         }
         [JsonIgnore]
@@ -18,7 +18,7 @@ namespace Orders.Application.DTOs
         public Guid ProductId { get; private set; }
         public string Name { get; private set; }
         public decimal Price { get; private set; }
-        public string Image { get; private set; }
+        public string ImageUrl { get; private set; }
         public int Quantity { get; private set; }
     }
 }

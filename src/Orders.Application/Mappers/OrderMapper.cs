@@ -17,15 +17,15 @@ namespace Orders.Application.Mappers
 
         public static List<OrderItem> MapOrderItemToEntity(this List<OrderItemDTO> dto, Guid orderId) =>
             dto.Select(item => new OrderItem(orderId, item.ProductId, item.Name,
-                       item.Quantity, item.Price, item.Image)).ToList();
+                       item.Quantity, item.Price, item.ImageUrl)).ToList();
 
         public static List<OrderItem> MapOrderItemEntityToProjection(this List<OrderItemDTO> dto, Guid orderId) =>
             dto.Select(item => new OrderItem(item.Id, orderId, item.ProductId, item.Name,
-                   item.Quantity, item.Price, item.Image)).ToList();
+                   item.Quantity, item.Price, item.ImageUrl)).ToList();
 
         public static List<OrderItemDTO> MapOrderItemFromEntity(this List<OrderItem> dto) =>
-            dto.Select(item => new OrderItemDTO(item.Id, item.ProductId, item.ProductName,
-                       item.UnitValue, item.ProductImage, item.Quantity)).ToList();
+            dto.Select(item => new OrderItemDTO(item.Id, item.ProductId, item.Name,
+                       item.Price, item.ImageUrl, item.Quantity)).ToList();
 
         public static Address MapToAddress(this AddressDTO dto) =>
             new(dto.Street, dto.Number, dto.AdditionalInfo, dto.Neighborhood, dto.ZipCode, dto.City, dto.State);

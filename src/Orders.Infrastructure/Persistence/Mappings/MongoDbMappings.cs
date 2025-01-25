@@ -82,10 +82,10 @@ namespace Orders.Infrastructure.Persistence.Mappings
                     map.MapProperty(i => i.ProductId).SetElementName("product_id")
                     .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-                    map.MapProperty(i => i.ProductName).SetElementName("product_name");
+                    map.MapProperty(i => i.Name).SetElementName("name");
                     map.MapProperty(i => i.Quantity).SetElementName("quantity");
-                    map.MapProperty(i => i.UnitValue).SetElementName("unit_value");
-                    map.MapProperty(i => i.ProductImage).SetElementName("product_image");
+                    map.MapProperty(i => i.Price).SetElementName("price");
+                    map.MapProperty(i => i.ImageUrl).SetElementName("image_url");
 
                     map.SetIgnoreExtraElements(true);
                 });
