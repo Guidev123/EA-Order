@@ -11,12 +11,8 @@ namespace Orders.API.Endpoints.Orders
             app.MapPost("/", HandleAsync).Produces<Response<CreateOrderResponse>>();
 
         private static async Task<IResult> HandleAsync(IMediator mediator,
-                                                       IUserService user,
                                                        CreateOrderCommand command)
         {
-            var userId = await user.GetUserIdAsync() ?? Guid.Empty;
-            command.SetCustomerId(userId);
-
             var result = await mediator.Send(command);
 
             return result.IsSuccess && result.Data is not null

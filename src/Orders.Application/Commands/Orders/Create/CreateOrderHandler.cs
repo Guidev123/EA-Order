@@ -5,19 +5,25 @@ using Orders.Application.Events.Vouchers;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
 using Orders.Application.Responses.Messages;
+using Orders.Application.Services;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
 
 namespace Orders.Application.Commands.Orders.Create
 {
-    public sealed class CreateOrderHandler(IUnitOfWork unitOfWork)
+    public sealed class CreateOrderHandler(IUnitOfWork unitOfWork, IUserService userService)
                       : CommandHandler, IRequestHandler<CreateOrderCommand, Response<CreateOrderResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IUserService _userService = userService;
         public async Task<Response<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var order = request.MapToEntity();
+            var customerId = await _userService.GetUserIdAsync();
+            if (customerId is null || !customerId.HasValue)
+                return new(null, 404, ResponseMessages.INVALID_OPERATION.GetDescription());
+
+            var order = request.MapToEntity(customerId.Value);
 
             order.ApplyAddress(request.Address.MapToAddress());
             order.AddItems(request.OrderItems.MapOrderItemToEntity(order.Id));

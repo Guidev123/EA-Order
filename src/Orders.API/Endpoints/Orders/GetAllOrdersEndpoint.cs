@@ -13,8 +13,8 @@ namespace Orders.API.Endpoints.Orders
 
         private static async Task<IResult> HandleAsync(IMediator mediator,
                                                        IUserService user,
-                                                        int pageNumber = 1,
-                                                        int pageSize = 5)
+                                                       int pageNumber = 1,
+                                                       int pageSize = 5)
         {
             var userId = await user.GetUserIdAsync() ?? Guid.Empty;
             var result = await mediator.Send(new GetAllOrdersQuery(pageNumber, pageSize, userId));

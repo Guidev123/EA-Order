@@ -7,8 +7,8 @@ namespace Orders.Application.Mappers
 {
     public static class OrderMapper
     {
-        public static Order MapToEntity(this CreateOrderCommand command) =>
-            new(command.CustomerId, command.TotalPrice, command.VoucherIsUsed, command.Discount);
+        public static Order MapToEntity(this CreateOrderCommand command, Guid customerId) =>
+            new(customerId, command.TotalPrice, command.VoucherIsUsed, command.Discount);
 
         public static List<OrderDTO> MapToEntity(this List<Order> orders) =>
                 orders.Select(order => new OrderDTO(order.Id, order.Code, order.CustomerId,
