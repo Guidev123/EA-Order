@@ -1,16 +1,14 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Orders.Application.Responses
+﻿namespace Orders.Application.Responses
 {
     public class PagedResponse<TData> : Response<TData>
     {
-        [JsonConstructor]
+        public PagedResponse() { }
         public PagedResponse(
             int totalCount,
             TData? data = default,
             int currentPage = 1,
             int pageSize = 5,
-            int code = 200,
+            int code = DEFAULT_STATUS_CODE,
             string? message = null,
             string[]? errors = null)
             : base(data, code, message, errors)
@@ -23,11 +21,12 @@ namespace Orders.Application.Responses
 
         public PagedResponse(
             TData? data,
-            int code = 200,
+            int code = DEFAULT_STATUS_CODE,
             string? message = null,
             string[]? errors = null)
             : base(data, code, message, errors)
         {
+
         }
 
         public int CurrentPage { get; set; }
