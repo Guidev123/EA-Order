@@ -9,6 +9,7 @@ using Orders.Application.Responses;
 using Orders.Application.Responses.Messages;
 using Orders.Application.Services;
 using Orders.Core.Entities;
+using Orders.Core.Events;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
 using SharedLib.MessageBus;
@@ -16,13 +17,11 @@ using SharedLib.MessageBus;
 namespace Orders.Application.Commands.Orders.Create
 {
     public sealed class CreateOrderHandler(IUnitOfWork unitOfWork,
-                        IUserService userService,
-                        IMessageBus bus)
+                        IUserService userService)
                       : CommandHandler, IRequestHandler<CreateOrderCommand, Response<CreateOrderResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IUserService _userService = userService;
-        private readonly IMessageBus _bus = bus;
         public async Task<Response<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var customerId = await _userService.GetUserIdAsync();
@@ -33,10 +32,6 @@ namespace Orders.Application.Commands.Orders.Create
 
             var address = request.Address.MapToAddress();
             order.ApplyAddress(address);
-            await _bus.PublishAsync(new ReceivedAddressIntegrationEvent(address.Street, address.Number, address.AdditionalInfo,
-                                    address.Neighborhood, address.ZipCode,
-                                    address.City, address.State));
-
             order.AddItems(request.OrderItems.MapOrderItemToEntity(order.Id));
 
             var validation = ValidateEntity(new OrderValidator(), order);
