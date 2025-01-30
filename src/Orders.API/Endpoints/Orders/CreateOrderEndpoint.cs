@@ -17,7 +17,7 @@ namespace Orders.API.Endpoints.Orders
 
             return result.IsSuccess && result.Data is not null
                 ? TypedResults.Created($"/{result.Data.OrderCode}", result)
-                : result.statusCode is 404 ? TypedResults.NotFound(result)
+                : result.StatusCode is 404 ? TypedResults.NotFound(result)
                 : TypedResults.BadRequest(result);
         }
     }
