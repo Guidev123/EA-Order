@@ -1,6 +1,8 @@
-﻿using FluentValidation.Results;
+﻿using EA.IntegrationEvents.Integration.ReceivedAddress;
+using FluentValidation.Results;
 using MediatR;
 using Orders.Application.Events.Factories;
+using Orders.Application.Events.Orders;
 using Orders.Application.Events.Vouchers;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
@@ -9,14 +11,18 @@ using Orders.Application.Services;
 using Orders.Core.Entities;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
+using SharedLib.MessageBus;
 
 namespace Orders.Application.Commands.Orders.Create
 {
-    public sealed class CreateOrderHandler(IUnitOfWork unitOfWork, IUserService userService)
+    public sealed class CreateOrderHandler(IUnitOfWork unitOfWork,
+                        IUserService userService,
+                        IMessageBus bus)
                       : CommandHandler, IRequestHandler<CreateOrderCommand, Response<CreateOrderResponse>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IUserService _userService = userService;
+        private readonly IMessageBus _bus = bus;
         public async Task<Response<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var customerId = await _userService.GetUserIdAsync();
@@ -25,7 +31,12 @@ namespace Orders.Application.Commands.Orders.Create
 
             var order = request.MapToEntity(customerId.Value);
 
-            order.ApplyAddress(request.Address.MapToAddress());
+            var address = request.Address.MapToAddress();
+            order.ApplyAddress(address);
+            await _bus.PublishAsync(new ReceivedAddressIntegrationEvent(address.Street, address.Number, address.AdditionalInfo,
+                                    address.Neighborhood, address.ZipCode,
+                                    address.City, address.State));
+
             order.AddItems(request.OrderItems.MapOrderItemToEntity(order.Id));
 
             var validation = ValidateEntity(new OrderValidator(), order);
