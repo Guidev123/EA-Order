@@ -1,18 +1,14 @@
-﻿using EA.IntegrationEvents.Integration.ReceivedAddress;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using MediatR;
 using Orders.Application.Events.Factories;
-using Orders.Application.Events.Orders;
 using Orders.Application.Events.Vouchers;
 using Orders.Application.Mappers;
 using Orders.Application.Responses;
 using Orders.Application.Responses.Messages;
 using Orders.Application.Services;
 using Orders.Core.Entities;
-using Orders.Core.Events;
 using Orders.Core.Repositories;
 using Orders.Core.Validators;
-using SharedLib.MessageBus;
 
 namespace Orders.Application.Commands.Orders.Create
 {

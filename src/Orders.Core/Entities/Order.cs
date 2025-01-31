@@ -43,11 +43,8 @@ namespace Orders.Core.Entities
         public void AddItems(List<OrderItem> orderItems) =>
             OrderItems.AddRange(orderItems);
 
-        public void ApplyAddress(Address address)
-        {
-            AddEvent(new ReceivedAddressEvent(address));
+        public void ApplyAddress(Address address) =>
             Address = address;
-        }
         public void CalculateOrderPrice()
         {
             TotalPrice = OrderItems.Sum(p => p.GetPrice());
